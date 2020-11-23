@@ -12,7 +12,7 @@ public abstract class Task {
     // TODO: fix the idle task
     public static class IDLE extends Task {
         public IDLE(Context context) {
-            super(false, context);
+            super(true, context);
         }
 
         @Override
