@@ -4,24 +4,32 @@ import java.util.UUID;
 
 public abstract class Task {
     private boolean taskCompleted = false;
-    protected boolean isAsynchronous = false;
-
+    private Context context;
+    public boolean isAsynchronous;
+    
     public UUID ID;
 
-    public static Task IDLE = new Task() {
-        @Override
-        public void run() {
-            while (!isCompleted()) { }
+    // TODO: fix the idle task
+    public static class IDLE extends Task {
+        public IDLE(Context context) {
+            super(false, context);
         }
+
+        @Override
+        public void run() { }
 
         @Override
         public boolean onComplete() {
-            return false;
+            System.out.println(getContext().getTaskLength());
+            if (getContext().getTaskLength() == 0) getContext().addTask(new IDLE(getContext()));
+            return true;
         }
-    };
+    }
 
-    public Task() {
+    public Task(boolean isAsynchronous, Context context) {
         ID = UUID.randomUUID();
+        this.isAsynchronous = isAsynchronous;
+        this.context = context;
     }
 
     public abstract void run();
@@ -40,7 +48,7 @@ public abstract class Task {
         taskCompleted = false;
     }
 
-    public boolean isAsynchronous() {
-        return isAsynchronous;
+    public Context getContext() {
+        return context;
     }
 }
