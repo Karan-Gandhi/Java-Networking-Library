@@ -43,7 +43,6 @@ public class Context {
                     }
                 });
                 thread.start();
-                System.out.println("Added thread to worker");
                 workers.add(thread);
             }
         }

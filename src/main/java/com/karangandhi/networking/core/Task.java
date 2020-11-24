@@ -16,12 +16,17 @@ public abstract class Task {
         }
 
         @Override
-        public void run() { }
+        public void run() {
+            while (getContext().getTaskLength() == 0);
+            try {
+                getContext().start();
+            } catch (TaskNotCompletedException e) {
+                e.printStackTrace();
+            }
+        }
 
         @Override
         public boolean onComplete() {
-            System.out.println(getContext().getTaskLength());
-            if (getContext().getTaskLength() == 0) getContext().addTask(new IDLE(getContext()));
             return true;
         }
     }
