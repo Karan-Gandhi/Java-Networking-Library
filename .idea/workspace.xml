@@ -84,37 +84,49 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1606115169810">
+    <state x="719" y="322" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1606198152467">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1606115169810" />
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1606185664489">
+    <state x="719" y="322" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1606198152467" />
+    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1606197321194">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1606185664489" />
-    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1606185664489">
+    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1606197321194" />
+    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1606196312692">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1606185664489" />
-    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1606185664489">
+    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1606196312692" />
+    <state x="690" y="267" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1606198524148">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1606185664489" />
-    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1606185664489">
+    <state x="690" y="267" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1606198524148" />
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1606197431781">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1606185664489" />
-    <state x="776" y="298" key="chooseDestDirectoryDialog" timestamp="1606069109774">
+    <state width="1877" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1606197431781" />
+    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1606197431781">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="776" y="298" key="chooseDestDirectoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1606069109774" />
-    <state x="616" y="240" key="run.anything.popup" timestamp="1606110573628">
+    <state width="1877" height="282" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1606197431781" />
+    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1606197431780">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1606110573628" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1606105319527">
+    <state width="1877" height="282" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1606197431780" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1606197431781">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1606105319527" />
+    <state width="1877" height="282" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1606197431781" />
+    <state x="776" y="298" key="chooseDestDirectoryDialog" timestamp="1606185871659">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="776" y="298" key="chooseDestDirectoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1606185871659" />
+    <state x="616" y="240" key="run.anything.popup" timestamp="1606196458624">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1606196458624" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1606186783744">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1606186783744" />
   </component>
 </project>
