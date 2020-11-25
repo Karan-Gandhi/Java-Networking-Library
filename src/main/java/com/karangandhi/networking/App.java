@@ -24,8 +24,6 @@ public class App implements Serializable {
         Message message = Message.readFrom(fileInputStream);
         System.out.println(testAppMessage.equals(message) + "\n" + testAppMessage + "\n" + message);
         fileInputStream.close();
-
-//        System.out.println();
     }
 
     @Override
