@@ -1,6 +1,7 @@
 package com.karangandhi.networking.core;
 
 import java.io.*;
+import java.util.Objects;
 
 public class Message <T extends Enum<T>, Q extends Serializable> implements Serializable {
     private MessageHeader<T> messageHeader;
@@ -12,15 +13,23 @@ public class Message <T extends Enum<T>, Q extends Serializable> implements Seri
         messageHeader.setSize(this.getBodySize());
     }
 
+    private Message(MessageHeader header, Q messageBody) {
+        this.messageHeader = header;
+        this.messageBody = messageBody;
+    }
+
     public void writeTo(OutputStream outputStream) throws IOException {
         messageHeader.writeTo(outputStream);
+        outputStream.write(toByteArray());
     }
 
     public static Message readFrom(InputStream inputStream) throws IOException {
         MessageHeader header = MessageHeader.readFrom(inputStream);
-        long size = header.getSize();
-        
-        return null;
+        int size = (int) header.getSize();
+        byte[] array = new byte[size];
+        inputStream.read(array);
+        Object obj = fromByteArray(array);
+        return new Message(header, (Serializable) obj);
     }
 
     public byte[] toByteArray() {
@@ -28,7 +37,7 @@ public class Message <T extends Enum<T>, Q extends Serializable> implements Seri
         ObjectOutputStream objectOutputStream = null;
         try {
             objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            objectOutputStream.writeObject(this);
+            objectOutputStream.writeObject(this.messageBody);
             objectOutputStream.flush();
             byte[] bytes = byteArrayOutputStream.toByteArray();
             return bytes;
@@ -67,14 +76,13 @@ public class Message <T extends Enum<T>, Q extends Serializable> implements Seri
         return -1;
     }
 
-    public static MessageHeader fromByteArray(byte[] bytes) {
+    public static Object fromByteArray(byte[] bytes) {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         ObjectInput objectInput = null;
 
         try {
             objectInput = new ObjectInputStream(byteArrayInputStream);
-            MessageHeader header = (MessageHeader) objectInput.readObject();
-            return header;
+            return objectInput.readObject();
         } catch (IOException exception) {
             exception.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -96,5 +104,19 @@ public class Message <T extends Enum<T>, Q extends Serializable> implements Seri
                 "messageHeader=" + messageHeader +
                 ", messageBody=" + messageBody +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Message<?, ?> message = (Message<?, ?>) o;
+        return Objects.equals(messageHeader, message.messageHeader) &&
+                Objects.equals(messageBody, message.messageBody);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(messageHeader, messageBody);
     }
 }

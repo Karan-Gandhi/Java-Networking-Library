@@ -5,6 +5,7 @@ import com.karangandhi.networking.core.MessageHeader;
 import com.karangandhi.networking.core.TaskNotCompletedException;
 
 import java.io.*;
+import java.util.Objects;
 
 public class App implements Serializable {
     public int a = 234;
@@ -21,7 +22,7 @@ public class App implements Serializable {
         fileOutputStream.close();
         FileInputStream fileInputStream = new FileInputStream("testFiletxt.txt");
         Message message = Message.readFrom(fileInputStream);
-        System.out.println(message);
+        System.out.println(testAppMessage.equals(message) + "\n" + testAppMessage + "\n" + message);
         fileInputStream.close();
 
 //        System.out.println();
@@ -33,5 +34,19 @@ public class App implements Serializable {
                 "a=" + a +
                 ", b=" + b +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        App app = (App) o;
+        return a == app.a &&
+                b == app.b;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(a, b);
     }
 }

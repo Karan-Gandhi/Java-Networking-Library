@@ -1,6 +1,7 @@
 package com.karangandhi.networking.core;
 
 import java.io.*;
+import java.util.Objects;
 
 public class MessageHeader<T extends Enum<T>> implements Serializable {
     public T id;
@@ -85,5 +86,18 @@ public class MessageHeader<T extends Enum<T>> implements Serializable {
                 "id=" + id +
                 ", size=" + size +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MessageHeader<?> header = (MessageHeader<?>) o;
+        return size == header.size;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, size);
     }
 }
