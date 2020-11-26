@@ -103,7 +103,7 @@ public abstract class Server {
     }
 
     private Connection onClientConnect(Socket clientSocket) {
-        Connection connection = new Connection();
+        Connection<Server> connection = new Connection(serverContext, Connection.Owner.SERVER, clientSocket, this);
         return null;
     }
 
