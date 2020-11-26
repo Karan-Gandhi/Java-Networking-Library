@@ -2,16 +2,15 @@ package com.karangandhi.networking.components;
 
 import com.karangandhi.networking.core.Context;
 import com.karangandhi.networking.core.Message;
+import com.karangandhi.networking.core.Task;
+import com.karangandhi.networking.core.TaskNotCompletedException;
 
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
-// Server will be running on the main thread
+// Server will be running on another thread
 public abstract class Server {
     private ArrayDeque<Message> readMessage;
     private ArrayDeque<Message> writeMessage;
@@ -27,12 +26,13 @@ public abstract class Server {
     private Context serverContext;
 
     public boolean isRunning;
+    private boolean verbose;
 
     // Constants
     public static final int TCP = 0;
     public static final int HTTP = 1;
 
-    public Server(String ip, int port, int type, int backlog) throws IOException {
+    public Server(String ip, int port, int type, int backlog, boolean verbose) throws IOException {
         this.ip = ip;
         this.port = port;
         this.isRunning = false;
@@ -41,6 +41,7 @@ public abstract class Server {
         this.ipInetAddress = InetAddress.getByName(ip);
         this.serverSocket = new ServerSocket(port, backlog, this.ipInetAddress);
         this.serverContext = new Context();
+        this.verbose = verbose;
     }
 
     public abstract boolean onClientConnected(Connection clientConnection);
@@ -62,14 +63,54 @@ public abstract class Server {
     }
 
     public void start() {
-        // Running on the main thread
+        // Running on another thread
         // TODO: start listening for clients forever until the stop function is called
-        this.isRunning = true;
+        try {
+            waitForClientConnection();
+            serverContext.start();
+            if (verbose) System.out.println("[Server] Server started successfully");
+        } catch (TaskNotCompletedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void waitForClientConnection() {
+        serverContext.addTask(new Task(true, serverContext) {
+            @Override
+            public void run() {
+                while(isRunning) {
+                    try {
+                        Socket socket = serverSocket.accept();
+                        Connection clientConnection = onClientConnect(socket);
+                        if (onClientConnected(clientConnection)) {
+                            if (verbose) System.out.println("[Server] Client " + clientConnection.getId() + " successfully connected");
+                            // TODO: Connection is successful
+                        } else {
+                            if (verbose) System.out.println("[Server] Client " + clientConnection.getId() + " rejected");
+                            // TODO: Client rejected
+                        }
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public boolean onComplete() {
+                return true;
+            }
+        });
+    }
+
+    private Connection onClientConnect(Socket clientSocket) {
+        Connection connection = new Connection();
+        return null;
     }
 
     public void stop() {
         // Stop the context and all the ongoing tasks
         // TODO: stop the server
+        isRunning = false;
     }
 
     public ArrayList<Connection> getClients() {
