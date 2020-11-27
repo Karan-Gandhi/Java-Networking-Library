@@ -28,19 +28,19 @@ public class Connection<T> {
     }
 
     public void connectToServer() {
-
+        // TODO: Complete the methode
     }
 
     public void connectToClient() {
-
+        // TODO: Complete the methode
     }
 
     public void disconnectFromServer() {
-        
+        // TODO: Complete the methode
     }
     
     public void disconnectFromClient() {
-        
+        // TODO: Complete the methode
     }
     
     public void start() {
