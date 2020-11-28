@@ -1,9 +1,6 @@
 package com.karangandhi.networking.components;
 
-import com.karangandhi.networking.core.Context;
-import com.karangandhi.networking.core.Message;
-import com.karangandhi.networking.core.Task;
-import com.karangandhi.networking.core.TaskNotCompletedException;
+import com.karangandhi.networking.core.*;
 
 import java.io.IOException;
 import java.net.*;
@@ -11,7 +8,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 // Server will be running on another thread
-public abstract class Server {
+public abstract class Server implements OwnerObject {
     private ArrayDeque<Message> readMessage;
     private ArrayDeque<Message> writeMessage;
     private ArrayList<Connection> clients;
@@ -102,7 +99,7 @@ public abstract class Server {
         });
     }
 
-    private Connection onClientConnect(Socket clientSocket) {
+    private Connection onClientConnect(Socket clientSocket) throws IOException {
         Connection<Server> connection = new Connection(serverContext, Connection.Owner.SERVER, clientSocket, this);
         return null;
     }

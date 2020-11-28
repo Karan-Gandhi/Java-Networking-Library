@@ -2,6 +2,7 @@ package com.karangandhi.networking.components;
 
 import com.karangandhi.networking.core.Context;
 import com.karangandhi.networking.core.Message;
+import com.karangandhi.networking.core.OwnerObject;
 import com.karangandhi.networking.core.Task;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.UUID;
 
-public class Connection<T> {
+public class Connection<T extends OwnerObject> {
     public enum Owner { CLIENT, SERVER }
     public enum DefaultMessages { CONNECTED, DISCONNECTED, PING }
 
@@ -66,18 +67,29 @@ public class Connection<T> {
     }
     
     public void writeMessage() {
-        while(!outMessageQueue.isEmpty()) {
-            Message currentMessage = outMessageQueue.removeFirst();
-            try {
-                currentMessage.writeTo(this.socketOutputStream);
-            } catch (IOException exception) {
-                // The Client is disconnected
+        synchronized (outMessageQueue) {
+            while (!outMessageQueue.isEmpty()) {
+                Message currentMessage = outMessageQueue.removeFirst();
+                try {
+                    currentMessage.writeTo(this.socketOutputStream);
+                } catch (IOException exception) {
+                    // The Client is disconnected
+                }
             }
         }
     }
 
     public void readMessage() {
-
+        synchronized (socketInputStream) {
+            try {
+                Message message = Message.readFrom(socketInputStream);
+                synchronized (ownerObject.readMessage) {
+                    ownerObject.readMessage.add(message);
+                }
+            } catch (IOException exception) {
+                // Client has disconnected
+            }
+        }
     }
 
     public UUID getId() {
