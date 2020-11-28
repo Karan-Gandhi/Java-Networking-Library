@@ -1,5 +1,7 @@
 package com.karangandhi.networking;
 
+import com.karangandhi.networking.components.Connection;
+import com.karangandhi.networking.components.Server;
 import com.karangandhi.networking.core.Message;
 import com.karangandhi.networking.core.MessageHeader;
 import com.karangandhi.networking.core.TaskNotCompletedException;
@@ -15,15 +17,29 @@ public class App implements Serializable {
         a, b, c, d, e, f, g, h, i, j
     }
 
-    public static void main(String[] args) throws TaskNotCompletedException, InterruptedException, IOException {
-        Message<test, App> testAppMessage = new Message<test, App>(test.a, new App());
-        FileOutputStream fileOutputStream = new FileOutputStream("testFiletxt.txt");
-        testAppMessage.writeTo(fileOutputStream);
-        fileOutputStream.close();
-        FileInputStream fileInputStream = new FileInputStream("testFiletxt.txt");
-        Message message = Message.readFrom(fileInputStream);
-        System.out.println(testAppMessage.equals(message) + "\n" + testAppMessage + "\n" + message);
-        fileInputStream.close();
+    public static void main(String[] args) {
+        Server server = null;
+        try {
+            server = new Server("127.0.0.1", 8000, Server.TCP, 100, true) {
+                @Override
+                public boolean onClientConnected(Connection clientConnection) {
+                    return true;
+                }
+
+                @Override
+                public void onMessageReceived(Message receivedMessage, Connection client) {
+                    System.out.println("Recieved: " + receivedMessage + " from: " + client);
+                }
+
+                @Override
+                public boolean onClientDisConnected(Connection clientConnection) {
+                    return true;
+                }
+            };
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        server.start();
     }
 
     @Override

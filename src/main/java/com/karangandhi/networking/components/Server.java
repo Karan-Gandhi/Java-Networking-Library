@@ -63,6 +63,7 @@ public abstract class Server implements OwnerObject {
         // Running on another thread
         // TODO: start listening for clients forever until the stop function is called
         try {
+            isRunning = true;
             waitForClientConnection();
             serverContext.start();
             if (verbose) System.out.println("[Server] Server started successfully");
@@ -101,7 +102,7 @@ public abstract class Server implements OwnerObject {
 
     private Connection onClientConnect(Socket clientSocket) throws IOException {
         Connection<Server> connection = new Connection(serverContext, Connection.Owner.SERVER, clientSocket, this);
-        return null;
+        return connection;
     }
 
     public void stop() {
