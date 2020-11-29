@@ -21,6 +21,7 @@ public abstract class Server implements OwnerObject {
     private ServerSocket serverSocket;
     private InetAddress ipInetAddress;
     private Context serverContext;
+    private Thread serverThread;
 
     public boolean isRunning;
     private boolean verbose;
@@ -73,7 +74,7 @@ public abstract class Server implements OwnerObject {
     }
 
     private void waitForClientConnection() {
-        serverContext.addTask(new Task(true, serverContext) {
+        Task serverTask = new Task(true, serverContext) {
             @Override
             public void run() {
                 while(isRunning) {
@@ -81,10 +82,10 @@ public abstract class Server implements OwnerObject {
                         Socket socket = serverSocket.accept();
                         Connection clientConnection = onClientConnect(socket);
                         if (onClientConnected(clientConnection)) {
-                            if (verbose) System.out.println("[Server] Client " + clientConnection.getId() + " successfully connected");
+                            if (verbose) System.out.println("[Server] Client " + clientConnection.getPort() + " successfully connected");
                             // TODO: Connection is successful
                         } else {
-                            if (verbose) System.out.println("[Server] Client " + clientConnection.getId() + " rejected");
+                            if (verbose) System.out.println("[Server] Client " + clientConnection.getPort() + " rejected");
                             // TODO: Client rejected
                         }
                     } catch (IOException exception) {
@@ -97,6 +98,11 @@ public abstract class Server implements OwnerObject {
             public boolean onComplete() {
                 return true;
             }
+        };
+        serverContext.addTask(serverTask);
+        // TODO: figure out how to get the thread of the server
+        serverContext.addOnStartCallback(() -> {
+
         });
     }
 
@@ -105,10 +111,16 @@ public abstract class Server implements OwnerObject {
         return connection;
     }
 
-    public void stop() {
+    public void stop() throws InterruptedException, IOException {
         // Stop the context and all the ongoing tasks
         // TODO: stop the server
         isRunning = false;
+        if (serverThread != null) {
+            if (verbose) System.out.println("[Server] Server down");
+            serverThread.join();
+            serverContext.stop();
+            serverSocket.close();
+        }
     }
 
     public ArrayList<Connection> getClients() {

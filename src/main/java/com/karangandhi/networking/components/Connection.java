@@ -96,6 +96,10 @@ public class Connection<T extends OwnerObject> {
         return id;
     }
 
+    public int getPort() {
+        return ownerSocket.getPort();
+    }
+
     private class READ_MESSAGE_TASK extends Task {
         // TODO: optimise the thread to sleep and wakeup only when a message is added
         public READ_MESSAGE_TASK(Context context) {

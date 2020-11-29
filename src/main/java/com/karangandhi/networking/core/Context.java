@@ -2,14 +2,17 @@ package com.karangandhi.networking.core;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Context {
     private ArrayDeque<Task> tasks;
     private ArrayList<Thread> workers;
+    private OnStartCallback onStartCallback;
 
     public Context() {
         tasks = new ArrayDeque<>();
         workers = new ArrayList<>();
+        onStartCallback = null;
     }
 
     public void addTask(Task t) {
@@ -21,6 +24,7 @@ public class Context {
     }
 
     public void start() throws TaskNotCompletedException {
+        if (onStartCallback != null) this.onStartCallback.onStart();
         while(!tasks.isEmpty()) {
             Task currentTask = this.getNextTask();
             if (!currentTask.isAsynchronous) {
@@ -43,6 +47,7 @@ public class Context {
                     }
                 });
                 thread.start();
+                currentTask.setTaskThread(thread);
                 workers.add(thread);
             }
         }
@@ -68,5 +73,17 @@ public class Context {
         for (Thread thread : workers) {
 //            if (thread.isAlive()) thread.stop();
         }
+    }
+
+    public Task getFirstTask() {
+        return this.tasks.getFirst();
+    }
+
+    public void addOnStartCallback(OnStartCallback callback) {
+        this.onStartCallback = callback;
+    }
+
+    public static interface OnStartCallback {
+        void onStart();
     }
 }

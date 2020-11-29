@@ -6,6 +6,7 @@ public abstract class Task {
     private boolean taskCompleted = false;
     private Context context;
     public boolean isAsynchronous;
+    private Thread taskThread;
     
     public UUID ID;
 
@@ -35,6 +36,7 @@ public abstract class Task {
         ID = UUID.randomUUID();
         this.isAsynchronous = isAsynchronous;
         this.context = context;
+        this.taskThread = null;
     }
 
     public abstract void run();
@@ -55,5 +57,13 @@ public abstract class Task {
 
     public Context getContext() {
         return context;
+    }
+
+    public void setTaskThread(Thread taskThread) {
+        this.taskThread = taskThread;
+    }
+
+    public Thread getTaskThread() {
+        return this.taskThread;
     }
 }
