@@ -1,5 +1,6 @@
 package com.karangandhi.networking.core;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -23,29 +24,12 @@ public class Context {
         return tasks.removeFirst();
     }
 
-    public void start() throws TaskNotCompletedException {
-        for(Task task : tasks) {
-            if (task.isAsynchronous) {
-                Thread thread = new Thread(() -> {
-                    synchronized (task) {
-                        task.run();
-                        task.markCompleted();
-                        if (!task.onComplete()) try {
-                            throw new TaskNotCompletedException(task);
-                        } catch (TaskNotCompletedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                thread.start();
-                task.setTaskThread(thread);
-                workers.add(thread);
-            }
-        }
+    public void start() throws TaskNotCompletedException, IOException {
         if (onStartCallback != null) this.onStartCallback.onStart();
         while(!tasks.isEmpty()) {
             Task currentTask = this.getNextTask();
             if (!currentTask.isAsynchronous) {
+                currentTask.onInitialise();
                 currentTask.run();
 
                 currentTask.markCompleted();
@@ -53,7 +37,25 @@ public class Context {
                     throw new TaskNotCompletedException(currentTask);
                 }
             } else {
-                currentTask.getTaskThread().run();
+                Thread thread = new Thread(() -> {
+                    synchronized (currentTask) {
+                        try {
+                            currentTask.run();
+                        } catch (IOException exception) {
+                            exception.printStackTrace();
+                        }
+                        currentTask.markCompleted();
+                        if (!currentTask.onComplete()) try {
+                            throw new TaskNotCompletedException(currentTask);
+                        } catch (TaskNotCompletedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                currentTask.setTaskThread(thread);
+                workers.add(thread);
+                currentTask.onInitialise();
+                thread.start();
             }
         }
     }
@@ -63,18 +65,21 @@ public class Context {
     }
 
     public void pause() throws InterruptedException {
+        // TODO: Test this method
         for (Thread thread : workers) {
             if(thread.isAlive()) thread.wait();
         }
     }
 
     public void resume() {
+        // TODO: Test this method
         for (Thread thread : workers) {
             thread.notify();
         }
     }
 
     public void stop() {
+        // TODO: Complete the stop method
         for (Thread thread : workers) {
 //            if (thread.isAlive()) thread.stop();
         }

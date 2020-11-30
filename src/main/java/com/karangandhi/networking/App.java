@@ -39,13 +39,14 @@ public class App implements Serializable {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-        server.start();
-        System.out.println("[App] test");
+        try {
+            server.start();
+        } catch (IOException exception) {
+            System.out.println("[Server] Server down");
+        }
         try {
             server.stop();
-        } catch (InterruptedException | IOException exception) {
-            exception.printStackTrace();
-        }
+        } catch (InterruptedException | IOException Ignored) {}
     }
 
     @Override

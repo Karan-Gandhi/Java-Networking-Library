@@ -1,5 +1,6 @@
 package com.karangandhi.networking.core;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public abstract class Task {
@@ -17,7 +18,7 @@ public abstract class Task {
         }
 
         @Override
-        public void run() {
+        public void run() throws IOException {
             while (getContext().getTaskLength() == 0);
             try {
                 getContext().start();
@@ -39,9 +40,12 @@ public abstract class Task {
         this.taskThread = null;
     }
 
-    public abstract void run();
+    public abstract void run() throws IOException;
 
     public abstract boolean onComplete();
+
+    // Optional method to override
+    public void onInitialise() {}
 
     public void markCompleted() {
         taskCompleted = true;
