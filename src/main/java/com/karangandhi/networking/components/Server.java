@@ -101,9 +101,9 @@ public abstract class Server implements OwnerObject {
         };
         serverContext.addTask(serverTask);
         // TODO: figure out how to get the thread of the server
-        serverContext.addOnStartCallback(() -> {
-
-        });
+//        serverContext.addOnStartCallback(() -> {
+//            this.serverThread = serverTask.getTaskThread();
+//        });
     }
 
     private Connection onClientConnect(Socket clientSocket) throws IOException {
@@ -117,9 +117,9 @@ public abstract class Server implements OwnerObject {
         isRunning = false;
         if (serverThread != null) {
             if (verbose) System.out.println("[Server] Server down");
-            serverThread.join();
             serverContext.stop();
             serverSocket.close();
+            serverThread.join();
         }
     }
 

@@ -24,6 +24,24 @@ public class Context {
     }
 
     public void start() throws TaskNotCompletedException {
+        for(Task task : tasks) {
+            if (task.isAsynchronous) {
+                Thread thread = new Thread(() -> {
+                    synchronized (task) {
+                        task.run();
+                        task.markCompleted();
+                        if (!task.onComplete()) try {
+                            throw new TaskNotCompletedException(task);
+                        } catch (TaskNotCompletedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                thread.start();
+                task.setTaskThread(thread);
+                workers.add(thread);
+            }
+        }
         if (onStartCallback != null) this.onStartCallback.onStart();
         while(!tasks.isEmpty()) {
             Task currentTask = this.getNextTask();
@@ -35,20 +53,7 @@ public class Context {
                     throw new TaskNotCompletedException(currentTask);
                 }
             } else {
-                Thread thread = new Thread(() -> {
-                    synchronized (currentTask) {
-                        currentTask.run();
-                        currentTask.markCompleted();
-                        if (!currentTask.onComplete()) try {
-                            throw new TaskNotCompletedException(currentTask);
-                        } catch (TaskNotCompletedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                thread.start();
-                currentTask.setTaskThread(thread);
-                workers.add(thread);
+                currentTask.getTaskThread().run();
             }
         }
     }
