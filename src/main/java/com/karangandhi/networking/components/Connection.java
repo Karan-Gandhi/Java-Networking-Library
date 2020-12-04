@@ -15,15 +15,15 @@ import java.util.UUID;
 
 public class Connection<T extends OwnerObject> {
     public enum Owner { CLIENT, SERVER }
-    public enum DefaultMessages { CONNECTED, DISCONNECTED, PING }
+    public enum DefaultMessages { CONNECTED, DISCONNECTED, PING, AUTHORISATION }
+
+    private ArrayDeque<Message> outMessageQueue;
 
     private Context context;
-    private ArrayDeque<Message> outMessageQueue;
     private Owner owner;
     private Socket ownerSocket;
     private T ownerObject;
     private UUID id;
-    private Message<DefaultMessages, Serializable> defaultMessagesSerializableMessage;
 
     private InputStream socketInputStream;
     private OutputStream socketOutputStream;
@@ -39,56 +39,41 @@ public class Connection<T extends OwnerObject> {
         this.socketOutputStream = socket.getOutputStream();
     }
 
-    public void connectToServer() {
-        if (owner == Owner.CLIENT) {
-            // add a async task to just read messages in the messages in the in message queue
-            context.addTask(new READ_MESSAGE_TASK(context));
-            context.addTask(new WRITE_MESSAGE_TASK(context));
+    public void connectToServer() throws IOException {
+        if (owner == Owner.CLIENT && ownerObject instanceof Client) {
+            Short authenticationToken = (Short) Message.readFrom(socketInputStream).messageBody;
+            Short newToken = this.encode(authenticationToken);
+            // TODO: Build the message and send it
         }
     }
 
     public void connectToClient() {
         if (owner == Owner.SERVER) {
-            context.addTask(new READ_MESSAGE_TASK(context));
-            context.addTask(new WRITE_MESSAGE_TASK(context));
+
         }
     }
 
     public void disconnectFromServer() {
         if (owner == Owner.CLIENT) {
-            outMessageQueue.add(new Message(DefaultMessages.DISCONNECTED, null));
+
         }
     }
     
     public void disconnectFromClient() {
         if (owner == Owner.SERVER) {
-            outMessageQueue.add(new Message(DefaultMessages.DISCONNECTED, null));
+
         }
     }
     
     public void writeMessage() {
         synchronized (outMessageQueue) {
-            while (!outMessageQueue.isEmpty()) {
-                Message currentMessage = outMessageQueue.removeFirst();
-                try {
-                    currentMessage.writeTo(this.socketOutputStream);
-                } catch (IOException exception) {
-                    // The Client is disconnected
-                }
-            }
+
         }
     }
 
     public void readMessage() {
         synchronized (socketInputStream) {
-            try {
-                Message message = Message.readFrom(socketInputStream);
-                synchronized (ownerObject.readMessage) {
-                    ownerObject.readMessage.add(message);
-                }
-            } catch (IOException exception) {
-                // Client has disconnected
-            }
+
         }
     }
 
@@ -100,38 +85,7 @@ public class Connection<T extends OwnerObject> {
         return ownerSocket.getPort();
     }
 
-    private class READ_MESSAGE_TASK extends Task {
-        // TODO: optimise the thread to sleep and wakeup only when a message is added
-        public READ_MESSAGE_TASK(Context context) {
-            super(true, context);
-        }
-
-        @Override
-        public void run() {
-            outMessageQueue.add(new Message(DefaultMessages.CONNECTED, null));
-            while (true) readMessage();
-        }
-
-        @Override
-        public boolean onComplete() {
-            return true;
-        }
-    }
-
-    private class WRITE_MESSAGE_TASK extends Task {
-        // TODO: optimise the thread to sleep and wakeup only when a message is added
-        public WRITE_MESSAGE_TASK(Context context) {
-            super(true, context);
-        }
-
-        @Override
-        public void run() {
-            while(true) writeMessage();
-        }
-
-        @Override
-        public boolean onComplete() {
-            return true;
-        }
+    private Short encode(Short token) {
+        return 0;
     }
 }

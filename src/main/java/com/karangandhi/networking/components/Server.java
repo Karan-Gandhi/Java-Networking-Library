@@ -60,15 +60,13 @@ public abstract class Server implements OwnerObject {
         // TODO: send message to all clients except the excludedClient
     }
 
-    public void start() throws IOException {
+    public void start() throws IOException, TaskNotCompletedException {
         // Running on another thread
         // TODO: start listening for clients forever until the stop function is called
-        try {
-            isRunning = true;
-            waitForClientConnection();
-            serverContext.start();
-            if (verbose) System.out.println("[Server] Server started successfully");
-        } catch (TaskNotCompletedException Ignored) { }
+        isRunning = true;
+        waitForClientConnection();
+        serverContext.start();
+        if (verbose) System.out.println("[Server] Server started successfully");
     }
 
     private void waitForClientConnection() throws IOException {
@@ -81,6 +79,7 @@ public abstract class Server implements OwnerObject {
                     if (onClientConnected(clientConnection)) {
                         if (verbose) System.out.println("[Server] Client " + clientConnection.getPort() + " successfully connected");
                         // TODO: Connection is successful
+
                     } else {
                         if (verbose) System.out.println("[Server] Client " + clientConnection.getPort() + " rejected");
                         // TODO: Client rejected

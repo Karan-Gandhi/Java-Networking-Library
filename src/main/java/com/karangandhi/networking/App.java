@@ -41,7 +41,7 @@ public class App implements Serializable {
         }
         try {
             server.start();
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             System.out.println("[Server] Server down");
         }
         try {
