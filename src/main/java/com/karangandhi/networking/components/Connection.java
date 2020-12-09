@@ -3,7 +3,6 @@ package com.karangandhi.networking.components;
 import com.karangandhi.networking.core.Context;
 import com.karangandhi.networking.core.Message;
 import com.karangandhi.networking.core.OwnerObject;
-import com.karangandhi.networking.core.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +27,8 @@ public class Connection<T extends OwnerObject> {
     private InputStream socketInputStream;
     private OutputStream socketOutputStream;
 
+    private Long tokenSent, tokenReceived;
+
     public Connection(Context context, Owner owner, Socket socket, T ownerObject) throws IOException {
         this.context = context;
         this.outMessageQueue = new ArrayDeque<Message>();
@@ -39,18 +40,54 @@ public class Connection<T extends OwnerObject> {
         this.socketOutputStream = socket.getOutputStream();
     }
 
-    public void connectToServer() throws IOException {
+    public boolean connectToServer() {
         if (owner == Owner.CLIENT && ownerObject instanceof Client) {
-            Short authenticationToken = (Short) Message.readFrom(socketInputStream).messageBody;
-            Short newToken = this.encode(authenticationToken);
-            // TODO: Build the message and send it
+            try {
+                Long authenticationToken = (Long) Message.readFrom(socketInputStream).messageBody;
+                this.tokenReceived = this.encode(authenticationToken);
+                this.tokenSent = encode(tokenReceived);
+                Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
+                authenticationMessage.writeTo(socketOutputStream);
+                Message statusMessage = Message.readFrom(socketInputStream);
+
+                if (statusMessage.getId() == DefaultMessages.CONNECTED) {
+                    // TODO: Add the readMessage Task
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (IOException exception) {
+                return false;
+            }
         }
+        return false;
     }
 
-    public void connectToClient() {
+    public boolean connectToClient() {
         if (owner == Owner.SERVER) {
+            try {
+                long max = 0xFFFFFFFF;
+                long min = -max;
+                long randomToken = (long) (Math.random() * (max - min) + min);
 
+                tokenSent = encode(randomToken);
+                tokenReceived = encode(tokenSent);
+
+                Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
+                authenticationMessage.writeTo(socketOutputStream);
+                Message<DefaultMessages, Long> receivedTokenMessage = Message.readFrom(socketInputStream);
+
+                if (receivedTokenMessage.getId() == DefaultMessages.AUTHORISATION && receivedTokenMessage.messageBody == tokenReceived) {
+                    new Message<DefaultMessages, Serializable>(DefaultMessages.CONNECTED, null).writeTo(socketOutputStream);
+                    // TODO: Add the read message task
+                } else {
+                    ownerSocket.close();
+                }
+            } catch (IOException exception) {
+                return false;
+            }
         }
+        return false;
     }
 
     public void disconnectFromServer() {
@@ -85,7 +122,11 @@ public class Connection<T extends OwnerObject> {
         return ownerSocket.getPort();
     }
 
-    private Short encode(Short token) {
-        return 0;
+    private Long encode(Long token) {
+        // Hackers please don't read this
+        Long newToken = token ^ 0xC0DEBEEF;
+        newToken >>= 12345;
+        newToken &= 0x12C0DE34;
+        return newToken;
     }
 }

@@ -18,6 +18,10 @@ public class Message <T extends Enum<T>, Q extends Serializable> implements Seri
         this.messageBody = messageBody;
     }
 
+    public T getId() {
+        return this.messageHeader.id;
+    }
+
     public void writeTo(OutputStream outputStream) throws IOException {
         messageHeader.writeTo(outputStream);
         outputStream.write(toByteArray());

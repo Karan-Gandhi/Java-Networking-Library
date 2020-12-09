@@ -7,7 +7,6 @@ import java.net.*;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
-// Server will be running on another thread
 public abstract class Server implements OwnerObject {
     private ArrayDeque<Message> readMessage;
     private ArrayDeque<Message> writeMessage;
@@ -76,8 +75,8 @@ public abstract class Server implements OwnerObject {
                 while(isRunning) {
                     Socket socket = serverSocket.accept();
                     Connection clientConnection = onClientConnect(socket);
-                    if (onClientConnected(clientConnection)) {
-                        if (verbose) System.out.println("[Server] Client " + clientConnection.getPort() + " successfully connected");
+                    if (onClientConnected(clientConnection) && clientConnection != null) {
+                        if (verbose) System.out.println("[Server] Client at " + clientConnection.getPort() + " successfully connected");
                         // TODO: Connection is successful
 
                     } else {
@@ -102,16 +101,16 @@ public abstract class Server implements OwnerObject {
 
     private Connection onClientConnect(Socket clientSocket) throws IOException {
         Connection<Server> connection = new Connection(serverContext, Connection.Owner.SERVER, clientSocket, this);
-        return connection;
+        return connection.connectToClient() ? connection : null;
     }
 
     public void stop() throws InterruptedException, IOException {
         isRunning = false;
         if (serverThread != null) {
-//            if (verbose) System.out.println("[Server] Server down");
             serverContext.stop();
             serverSocket.close();
             serverThread.join();
+            if (verbose) System.out.println("[Server] Server down");
         }
     }
 
