@@ -3,6 +3,8 @@ package com.karangandhi.networking.components;
 import com.karangandhi.networking.core.Context;
 import com.karangandhi.networking.core.Message;
 import com.karangandhi.networking.core.OwnerObject;
+import com.karangandhi.networking.core.Task;
+import com.karangandhi.networking.utils.Tasks;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,6 +82,7 @@ public class Connection<T extends OwnerObject> {
                 if (receivedTokenMessage.getId() == DefaultMessages.AUTHORISATION && receivedTokenMessage.messageBody == tokenReceived) {
                     new Message<DefaultMessages, Serializable>(DefaultMessages.CONNECTED, null).writeTo(socketOutputStream);
                     // TODO: Add the read message task
+                    Task readMessage = new Tasks.ServerTasks.ReadMessageTask()
                 } else {
                     ownerSocket.close();
                 }
