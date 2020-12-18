@@ -1,6 +1,8 @@
 package com.karangandhi.networking.components;
 
 import com.karangandhi.networking.core.*;
+import com.karangandhi.networking.utils.Message;
+import com.karangandhi.networking.utils.OwnerObject;
 
 import java.io.IOException;
 import java.net.*;
@@ -24,6 +26,8 @@ public abstract class Server implements OwnerObject {
 
     public boolean isRunning;
     private boolean verbose;
+
+    private Task readMessageTask;
 
     // Constants
     public static final int TCP = 0;
@@ -75,10 +79,10 @@ public abstract class Server implements OwnerObject {
                 while(isRunning) {
                     Socket socket = serverSocket.accept();
                     Connection clientConnection = onClientConnect(socket);
+                    System.out.println(clientConnection);
                     if (onClientConnected(clientConnection) && clientConnection != null) {
                         if (verbose) System.out.println("[Server] Client at " + clientConnection.getPort() + " successfully connected");
                         // TODO: Connection is successful
-
                     } else {
                         if (verbose) System.out.println("[Server] Client " + clientConnection.getPort() + " rejected");
                         // TODO: Client rejected
@@ -124,5 +128,9 @@ public abstract class Server implements OwnerObject {
 
     public String getIp() {
         return ip;
+    }
+
+    public Context getServerContext() {
+        return this.serverContext;
     }
 }

@@ -1,37 +1,41 @@
 package com.karangandhi.networking.utils;
 
-import com.karangandhi.networking.components.Connection;
-import com.karangandhi.networking.components.Server;
 import com.karangandhi.networking.core.Context;
-import com.karangandhi.networking.core.Message;
 import com.karangandhi.networking.core.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 public class Tasks {
     public static class ServerTasks {
         public static class ReadMessageTask extends Task {
-            private InputStream inputStream;
+            public static interface Callback {
+                void onMessageReceived(Message message);
+            }
 
-            // TODO: add a handler
-            public ReadMessageTask(Context context, InputStream inputStream) {
+            private InputStream inputStream;
+            private Callback readMessageCallback;
+            public boolean isAlive;
+
+            public ReadMessageTask(Context context, InputStream inputStream, Callback callback) {
                 super(true, context);
                 this.inputStream = inputStream;
+                this.readMessageCallback = callback;
+                this.isAlive = true;
             }
 
             @Override
             public void run() throws IOException {
-                while (true) {
+                while (isAlive) {
+                    System.out.println("[Server] Waiting for message!");
                     Message newMessage = Message.readFrom(this.inputStream);
+                    readMessageCallback.onMessageReceived(newMessage);
                 }
             }
 
             @Override
             public boolean onComplete() {
-                return false;
+                return true;
             }
         }
     }

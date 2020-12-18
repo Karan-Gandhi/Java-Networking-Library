@@ -1,10 +1,11 @@
 package com.karangandhi.networking.components;
 
 import com.karangandhi.networking.core.Context;
-import com.karangandhi.networking.core.Message;
-import com.karangandhi.networking.core.OwnerObject;
+import com.karangandhi.networking.utils.Message;
+import com.karangandhi.networking.utils.OwnerObject;
 import com.karangandhi.networking.core.Task;
 import com.karangandhi.networking.utils.Tasks;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,6 +55,7 @@ public class Connection<T extends OwnerObject> {
 
                 if (statusMessage.getId() == DefaultMessages.CONNECTED) {
                     // TODO: Add the readMessage Task
+
                     return true;
                 } else {
                     return false;
@@ -81,8 +83,10 @@ public class Connection<T extends OwnerObject> {
 
                 if (receivedTokenMessage.getId() == DefaultMessages.AUTHORISATION && receivedTokenMessage.messageBody == tokenReceived) {
                     new Message<DefaultMessages, Serializable>(DefaultMessages.CONNECTED, null).writeTo(socketOutputStream);
-                    // TODO: Add the read message task
-                    Task readMessage = new Tasks.ServerTasks.ReadMessageTask()
+                    Task readMessage = new Tasks.ServerTasks.ReadMessageTask(context, socketInputStream, (Message newMessage) -> {
+                        ownerObject.onMessageReceived(newMessage, this);
+                    });
+                    context.addTask(readMessage);
                 } else {
                     ownerSocket.close();
                 }
@@ -131,5 +135,21 @@ public class Connection<T extends OwnerObject> {
         newToken >>= 12345;
         newToken &= 0x12C0DE34;
         return newToken;
+    }
+
+    @Override
+    public String toString() {
+        return "Connection{" +
+                "outMessageQueue=" + outMessageQueue +
+                ", context=" + context +
+                ", owner=" + owner +
+                ", ownerSocket=" + ownerSocket +
+                ", ownerObject=" + ownerObject +
+                ", id=" + id +
+                ", socketInputStream=" + socketInputStream +
+                ", socketOutputStream=" + socketOutputStream +
+                ", tokenSent=" + tokenSent +
+                ", tokenReceived=" + tokenReceived +
+                '}';
     }
 }

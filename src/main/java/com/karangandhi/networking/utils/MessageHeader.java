@@ -1,4 +1,4 @@
-package com.karangandhi.networking.core;
+package com.karangandhi.networking.utils;
 
 import java.io.*;
 import java.util.Objects;
@@ -63,6 +63,7 @@ public class MessageHeader<T extends Enum<T>> implements Serializable {
 
         try {
             objectInput = new ObjectInputStream(byteArrayInputStream);
+            //TODO: fix this
             MessageHeader header = (MessageHeader) objectInput.readObject();
             return header;
         } catch (IOException exception) {

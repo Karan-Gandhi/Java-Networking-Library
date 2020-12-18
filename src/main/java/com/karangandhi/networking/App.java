@@ -2,11 +2,10 @@ package com.karangandhi.networking;
 
 import com.karangandhi.networking.components.Connection;
 import com.karangandhi.networking.components.Server;
-import com.karangandhi.networking.core.Message;
-import com.karangandhi.networking.core.MessageHeader;
-import com.karangandhi.networking.core.TaskNotCompletedException;
+import com.karangandhi.networking.utils.Message;
 
 import java.io.*;
+import java.net.Socket;
 import java.util.Objects;
 
 public class App implements Serializable {
@@ -36,17 +35,19 @@ public class App implements Serializable {
                     return true;
                 }
             };
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-        try {
             server.start();
+
+            Socket socket = new Socket("127.0.0.1", 8000);
+            InputStream stream = socket.getInputStream();
+            OutputStream stream1 = socket.getOutputStream();
+            Object body = Message.readFrom(stream).messageBody;
+            System.out.println(body);
+//            Message message = new Message(Connection.DefaultMessages.AUTHORISATION, encode(body));
+//            message.writeTo(stream1);
+//            server.stop();
         } catch (Exception exception) {
             System.out.println("[Server] Server down");
         }
-        try {
-            server.stop();
-        } catch (InterruptedException | IOException Ignored) {}
     }
 
     @Override
@@ -69,5 +70,13 @@ public class App implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(a, b);
+    }
+
+    public static Long encode(Long token) {
+        // Hackers please don't read this
+        Long newToken = token ^ 0xC0DEBEEF;
+        newToken >>= 12345;
+        newToken &= 0x12C0DE34;
+        return newToken;
     }
 }
