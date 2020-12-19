@@ -79,6 +79,16 @@ public class Connection<T extends OwnerObject> {
 
                 Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
                 authenticationMessage.writeTo(socketOutputStream);
+
+                System.out.println("[Server] : ");
+                for (byte b : authenticationMessage.messageHeader.toByteArray()) {
+                    System.out.print(b + " ");
+                }
+                for (byte b : authenticationMessage.toByteArray()) {
+                    System.out.print(b + " ");
+                }
+                System.out.println();
+
                 Message<DefaultMessages, Long> receivedTokenMessage = Message.readFrom(socketInputStream);
 
                 if (receivedTokenMessage.getId() == DefaultMessages.AUTHORISATION && receivedTokenMessage.messageBody == tokenReceived) {

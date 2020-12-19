@@ -1,12 +1,16 @@
 package com.karangandhi.networking.utils;
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 import java.io.*;
 import java.util.Objects;
 
 public class MessageHeader<T extends Enum<T>> implements Serializable {
     public T id;
     public long size;
-    public static final int HEADER_SIZE = 190;
+    public static int HEADER_SIZE = 282;
+
+    private static enum TestHeader { TEST }
 
     public MessageHeader(T id) {
         this.id = id;
@@ -26,12 +30,12 @@ public class MessageHeader<T extends Enum<T>> implements Serializable {
     }
 
     public void writeTo(OutputStream out) throws IOException {
-        out.write(this.toByteArray(), 0, this.toByteArray().length);
+        out.write(this.toByteArray());
     }
 
     public static MessageHeader readFrom(InputStream inputStream) throws IOException {
         byte[] array = new byte[MessageHeader.HEADER_SIZE];
-        inputStream.read(array, 0, MessageHeader.HEADER_SIZE);
+        inputStream.read(array);
         return MessageHeader.fromByteArray(array);
     }
 
@@ -61,11 +65,18 @@ public class MessageHeader<T extends Enum<T>> implements Serializable {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         ObjectInput objectInput = null;
 
+        for (byte b : bytes) {
+            System.out.print(b + " ");
+        }
+
+        System.out.println();
+        System.out.print(bytes.length + '\n');
         try {
             objectInput = new ObjectInputStream(byteArrayInputStream);
-            //TODO: fix this
+            // TODO: fix this
             MessageHeader header = (MessageHeader) objectInput.readObject();
             return header;
+//            System.out.print("[Here]" + objectInput.readObject());
         } catch (IOException exception) {
             exception.printStackTrace();
         } catch (ClassNotFoundException e) {

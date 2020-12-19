@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.Objects;
 
 public class Message <T extends Enum<T>, Q extends Serializable> implements Serializable {
-    private MessageHeader<T> messageHeader;
+    public MessageHeader<T> messageHeader;
     public Q messageBody;
 
     public Message(T id, Q messageBody) {
@@ -23,7 +23,7 @@ public class Message <T extends Enum<T>, Q extends Serializable> implements Seri
     }
 
     public void writeTo(OutputStream outputStream) throws IOException {
-        messageHeader.writeTo(outputStream);
+        this.messageHeader.writeTo(outputStream);
         outputStream.write(toByteArray());
     }
 
@@ -78,6 +78,10 @@ public class Message <T extends Enum<T>, Q extends Serializable> implements Seri
             }
         }
         return -1;
+    }
+
+    public long getHeaderSize() {
+        return this.messageHeader.getSize();
     }
 
     public static Object fromByteArray(byte[] bytes) {
