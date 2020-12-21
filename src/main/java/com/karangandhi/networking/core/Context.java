@@ -41,8 +41,8 @@ public class Context {
                     synchronized (currentTask) {
                         try {
                             currentTask.run();
-                        } catch (IOException exception) {
-                            exception.printStackTrace();
+                        } catch (IOException Ignored) {
+                            // exception.printStackTrace();
                         }
                         currentTask.markCompleted();
                         if (!currentTask.onComplete()) try {

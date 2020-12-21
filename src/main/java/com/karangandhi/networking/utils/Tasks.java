@@ -2,6 +2,7 @@ package com.karangandhi.networking.utils;
 
 import com.karangandhi.networking.core.Context;
 import com.karangandhi.networking.core.Task;
+import com.karangandhi.networking.core.Message;
 
 import java.io.IOException;
 import java.io.InputStream;

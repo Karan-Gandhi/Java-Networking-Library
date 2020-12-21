@@ -1,11 +1,10 @@
 package com.karangandhi.networking.components;
 
 import com.karangandhi.networking.core.Context;
-import com.karangandhi.networking.utils.Message;
+import com.karangandhi.networking.core.Message;
 import com.karangandhi.networking.utils.OwnerObject;
 import com.karangandhi.networking.core.Task;
 import com.karangandhi.networking.utils.Tasks;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,9 +43,16 @@ public class Connection<T extends OwnerObject> {
     }
 
     public boolean connectToServer() {
-        if (owner == Owner.CLIENT && ownerObject instanceof Client) {
+        if (owner == Owner.CLIENT) {
             try {
-                Long authenticationToken = (Long) Message.readFrom(socketInputStream).messageBody;
+//                Long authenticationToken = (Long) Message.readFrom(socketInputStream).messageBody;
+                InputStream inputStream = ownerSocket.getInputStream();
+                OutputStream outputStream = ownerSocket.getOutputStream();
+                Message message = Message.readFrom(inputStream);
+                long authenticationToken = encode((long) message.messageBody);
+                Message newMessage = new Message(Connection.DefaultMessages.AUTHORISATION, authenticationToken);
+                newMessage.writeTo(outputStream);
+                if (ownerObject.debug) System.out.println("[DEBUG] [Connection::connectToServer] authenticationTokenRecieved = " + authenticationToken);
                 this.tokenReceived = this.encode(authenticationToken);
                 this.tokenSent = encode(tokenReceived);
                 Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
@@ -71,7 +77,7 @@ public class Connection<T extends OwnerObject> {
         if (owner == Owner.SERVER) {
             try {
                 long max = 0xFFFFFFFF;
-                long min = -max;
+                long min = 0;
                 long randomToken = (long) (Math.random() * (max - min) + min);
 
                 tokenSent = encode(randomToken);
@@ -80,24 +86,20 @@ public class Connection<T extends OwnerObject> {
                 Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
                 authenticationMessage.writeTo(socketOutputStream);
 
-                System.out.println("[Server] : ");
-                for (byte b : authenticationMessage.messageHeader.toByteArray()) {
-                    System.out.print(b + " ");
-                }
-                for (byte b : authenticationMessage.toByteArray()) {
-                    System.out.print(b + " ");
-                }
-                System.out.println();
+                if (ownerObject.debug) System.out.println("[DEBUG] [Connection::connectToClient] tokenSent = " + tokenSent + ", tokenExpected = " + tokenReceived);
+                if (ownerObject.debug) System.out.println("[DEBUG] [Connection::connectToClient] Header size = " + authenticationMessage.getHeaderSize());
 
                 Message<DefaultMessages, Long> receivedTokenMessage = Message.readFrom(socketInputStream);
 
-                if (receivedTokenMessage.getId() == DefaultMessages.AUTHORISATION && receivedTokenMessage.messageBody == tokenReceived) {
+                if (receivedTokenMessage.getId() == DefaultMessages.AUTHORISATION && receivedTokenMessage.messageBody.equals(tokenReceived)) {
                     new Message<DefaultMessages, Serializable>(DefaultMessages.CONNECTED, null).writeTo(socketOutputStream);
                     Task readMessage = new Tasks.ServerTasks.ReadMessageTask(context, socketInputStream, (Message newMessage) -> {
                         ownerObject.onMessageReceived(newMessage, this);
                     });
                     context.addTask(readMessage);
+                    return true;
                 } else {
+                    if (ownerObject.isVerbose()) System.out.println("[Connection] Closing Connection - Authentication failed: ID = " + receivedTokenMessage.getId() + ", Recieved Token = " + receivedTokenMessage.messageBody + ", Expected Token = " + this.tokenReceived + ", Authentication Status = " + (receivedTokenMessage.messageBody.equals(tokenReceived)));
                     ownerSocket.close();
                 }
             } catch (IOException exception) {
@@ -142,8 +144,6 @@ public class Connection<T extends OwnerObject> {
     private Long encode(Long token) {
         // Hackers please don't read this
         Long newToken = token ^ 0xC0DEBEEF;
-        newToken >>= 12345;
-        newToken &= 0x12C0DE34;
         return newToken;
     }
 
