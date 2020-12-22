@@ -128,13 +128,38 @@ public class Connection<T extends OwnerObject> {
     
     public void writeMessage() {
         synchronized (outMessageQueue) {
-
+            while (!outMessageQueue.isEmpty()) {
+                Message currentMessage = outMessageQueue.pop();
+                try {
+                    currentMessage.writeTo(socketOutputStream);
+                } catch (IOException exception) {
+                    this.close();
+                    ownerObject.detachConnection(this);
+                }
+            }
         }
     }
 
     public void readMessage() {
         synchronized (socketInputStream) {
 
+        }
+    }
+
+    public void addMessage(Message message) {
+        synchronized (outMessageQueue) {
+            outMessageQueue.add(message);
+            writeMessage();
+        }
+    }
+
+    public void close() {
+        try {
+            this.socketInputStream.close();
+            this.socketOutputStream.close();
+            this.ownerSocket.close();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
 

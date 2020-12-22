@@ -10,5 +10,6 @@ public interface OwnerObject {
     ArrayDeque<Message> writeMessage = new ArrayDeque<>();
 
     public abstract void onMessageReceived(Message receivedMessage, Connection client);
-    public abstract boolean isVerbose();
+    public boolean isVerbose();
+    public void detachConnection(Connection connection);
 }

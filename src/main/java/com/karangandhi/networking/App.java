@@ -6,6 +6,7 @@ import com.karangandhi.networking.core.Context;
 import com.karangandhi.networking.core.Debug;
 import com.karangandhi.networking.core.Message;
 import com.karangandhi.networking.utils.OwnerObject;
+import org.omg.PortableServer.THREAD_POLICY_ID;
 
 import java.io.*;
 import java.net.Socket;
@@ -49,6 +50,7 @@ public class App implements Serializable {
 
                 @Override
                 public void onMessageReceived(Message receivedMessage, Connection client) {
+                    dbg(receivedMessage);
                     return;
                 }
 
@@ -56,17 +58,25 @@ public class App implements Serializable {
                 public boolean isVerbose() {
                     return false;
                 }
+
+                @Override
+                public void detachConnection(Connection connection) {
+                    return;
+                }
             });
 
             client.connectToServer();
+            // Need to add this as the client and the server are on the same file
             Thread.sleep(3000);
-//            for (Connection clients : server.getClients()) {
-//                dbg(clients);
-//            }
+            server.sendAll(new Message(test.a, "Hello world"));
+            Thread.sleep(3000);
+            Message me = Message.readFrom(socket.getInputStream());
+            System.out.println(me);
         } catch (Exception exception) {
             exception.printStackTrace();
             System.out.println("[Server] Server down");
         }
+
     }
 
 

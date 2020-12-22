@@ -52,12 +52,19 @@ public abstract class Server implements OwnerObject {
 
     public abstract boolean onClientDisConnected(Connection clientConnection);
 
+    public void detachConnection(Connection connection) {
+        clients.remove(clients);
+    }
+
     public void sendMessage(Message message, Connection client) {
         // TODO: send the message to the client
     }
     
     public void sendAll(Message message) {
         // TODO: send the message to all clients
+        for (Connection client : this.clients) {
+            client.addMessage(message);
+        }
     }
     
     public void sendAll(Message message, Connection excludeClient) {
