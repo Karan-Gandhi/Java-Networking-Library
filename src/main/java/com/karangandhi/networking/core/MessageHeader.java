@@ -140,12 +140,14 @@ public class MessageHeader<T extends Enum<T>> implements Serializable {
     }
 
     public void writeTo(OutputStream out) throws IOException {
+        new DataOutputStream(out).writeInt(this.toByteArray().length);
         out.write(this.toByteArray(), 0, this.toByteArray().length);
     }
 
     public static MessageHeader readFrom(InputStream inputStream) throws IOException {
-        byte[] array = new byte[MessageHeader.HEADER_SIZE];
-        inputStream.read(array, 0, MessageHeader.HEADER_SIZE);
+        int headerSize = new DataInputStream(inputStream).readInt();
+        byte[] array = new byte[headerSize];
+        inputStream.read(array, 0, headerSize);
         return MessageHeader.fromByteArray(array);
     }
 
