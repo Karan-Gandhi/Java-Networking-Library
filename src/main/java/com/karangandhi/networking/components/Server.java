@@ -65,7 +65,6 @@ public abstract class Server implements OwnerObject {
 
     public void start() throws IOException, TaskNotCompletedException {
         // Running on another thread
-        // TODO: start listening for clients forever until the stop function is called
         isRunning = true;
         waitForClientConnection();
         serverContext.start();

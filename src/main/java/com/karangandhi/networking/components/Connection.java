@@ -2,17 +2,17 @@ package com.karangandhi.networking.components;
 
 import com.karangandhi.networking.core.Context;
 import com.karangandhi.networking.core.Message;
+import com.karangandhi.networking.utils.Constants;
 import com.karangandhi.networking.utils.OwnerObject;
 import com.karangandhi.networking.core.Task;
 import com.karangandhi.networking.utils.Tasks;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.UUID;
+
+import static com.karangandhi.networking.core.Debug.dbg;
 
 public class Connection<T extends OwnerObject> {
     public enum Owner { CLIENT, SERVER }
@@ -45,23 +45,24 @@ public class Connection<T extends OwnerObject> {
     public boolean connectToServer() {
         if (owner == Owner.CLIENT) {
             try {
-//                Long authenticationToken = (Long) Message.readFrom(socketInputStream).messageBody;
-                InputStream inputStream = ownerSocket.getInputStream();
-                OutputStream outputStream = ownerSocket.getOutputStream();
-                Message message = Message.readFrom(inputStream);
+                Message message = Message.readFrom(socketInputStream);
                 long authenticationToken = encode((long) message.messageBody);
+
                 Message newMessage = new Message(Connection.DefaultMessages.AUTHORISATION, authenticationToken);
-                newMessage.writeTo(outputStream);
-                if (ownerObject.debug) System.out.println("[DEBUG] [Connection::connectToServer] authenticationTokenRecieved = " + authenticationToken);
+                newMessage.writeTo(socketOutputStream);
+
+                dbg("authenticationTokenRecieved = " + authenticationToken);
+
                 this.tokenReceived = this.encode(authenticationToken);
                 this.tokenSent = encode(tokenReceived);
+
                 Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
                 authenticationMessage.writeTo(socketOutputStream);
                 Message statusMessage = Message.readFrom(socketInputStream);
 
                 if (statusMessage.getId() == DefaultMessages.CONNECTED) {
                     // TODO: Add the readMessage Task
-
+                    dbg("Status Message = " + statusMessage);
                     return true;
                 } else {
                     return false;
@@ -86,13 +87,17 @@ public class Connection<T extends OwnerObject> {
                 Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
                 authenticationMessage.writeTo(socketOutputStream);
 
-                if (ownerObject.debug) System.out.println("[DEBUG] [Connection::connectToClient] tokenSent = " + tokenSent + ", tokenExpected = " + tokenReceived);
-                if (ownerObject.debug) System.out.println("[DEBUG] [Connection::connectToClient] Header size = " + authenticationMessage.getHeaderSize());
+                dbg("tokenSent = " + tokenSent + ", tokenExpected = " + tokenReceived);
+                dbg("Header size = " + authenticationMessage.getHeaderSize());
 
                 Message<DefaultMessages, Long> receivedTokenMessage = Message.readFrom(socketInputStream);
 
                 if (receivedTokenMessage.getId() == DefaultMessages.AUTHORISATION && receivedTokenMessage.messageBody.equals(tokenReceived)) {
-                    new Message<DefaultMessages, Serializable>(DefaultMessages.CONNECTED, null).writeTo(socketOutputStream);
+                    Message statusMessage = new Message<DefaultMessages, Serializable>(DefaultMessages.CONNECTED, null);
+                    statusMessage.writeTo(socketOutputStream);
+
+                    dbg("statusMessageHeaderSize = " + statusMessage.getHeaderSize());
+
                     Task readMessage = new Tasks.ServerTasks.ReadMessageTask(context, socketInputStream, (Message newMessage) -> {
                         ownerObject.onMessageReceived(newMessage, this);
                     });

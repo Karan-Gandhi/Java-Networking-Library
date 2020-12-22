@@ -3,13 +3,13 @@ package com.karangandhi.networking;
 import com.karangandhi.networking.components.Connection;
 import com.karangandhi.networking.components.Server;
 import com.karangandhi.networking.core.Context;
+import com.karangandhi.networking.core.Debug;
 import com.karangandhi.networking.core.Message;
 import com.karangandhi.networking.utils.OwnerObject;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Objects;
-import java.util.Scanner;
 
 public class App implements Serializable {
     public int a = 234;
@@ -20,6 +20,8 @@ public class App implements Serializable {
     }
 
     public static void main(String[] args) throws IOException {
+        Debug.setDebug(true);
+
         Server server = null;
         try {
             server = new Server("127.0.0.1", 8000, Server.TCP, 100, true) {
@@ -55,23 +57,10 @@ public class App implements Serializable {
             });
 
             client.connectToServer();
-//            InputStream stream = socket.getInputStream();
-//            OutputStream stream1 = socket.getOutputStream();
-//            Message message = Message.readFrom(stream);
-//            Message newMessage = new Message(Connection.DefaultMessages.AUTHORISATION, encode((long) message.messageBody) + 1);
-//            newMessage.writeTo(stream1);
         } catch (Exception exception) {
-            System.out.println("[Server] Server down");
-//            exception.printStackTrace();
-        }
-
-        try {
-            Thread.sleep(1000);
-            server.stop();
-        } catch (InterruptedException exception) {
             exception.printStackTrace();
+            System.out.println("[Server] Server down");
         }
-
     }
 
 

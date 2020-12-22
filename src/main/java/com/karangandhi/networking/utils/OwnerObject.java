@@ -8,7 +8,6 @@ import java.util.ArrayDeque;
 public interface OwnerObject {
     ArrayDeque<Message> readMessage = new ArrayDeque<>();
     ArrayDeque<Message> writeMessage = new ArrayDeque<>();
-    public boolean debug = true;
 
     public abstract void onMessageReceived(Message receivedMessage, Connection client);
     public abstract boolean isVerbose();
