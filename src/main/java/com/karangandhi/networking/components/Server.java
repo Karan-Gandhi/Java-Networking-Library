@@ -9,6 +9,8 @@ import java.net.*;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
+import static com.karangandhi.networking.core.Debug.dbg;
+
 public abstract class Server implements OwnerObject {
     private ArrayDeque<Message> readMessage;
     private ArrayDeque<Message> writeMessage;
@@ -27,8 +29,6 @@ public abstract class Server implements OwnerObject {
     public boolean isRunning;
     private boolean verbose;
 
-    private Task readMessageTask;
-
     // Constants
     public static final int TCP = 0;
     public static final int HTTP = 1;
@@ -43,6 +43,7 @@ public abstract class Server implements OwnerObject {
         this.serverSocket = new ServerSocket(port, backlog, this.ipInetAddress);
         this.serverContext = new Context();
         this.verbose = verbose;
+        this.clients = new ArrayList<Connection>();
     }
 
     public abstract boolean onClientConnected(Connection clientConnection);
@@ -81,6 +82,7 @@ public abstract class Server implements OwnerObject {
                     if (onClientConnected(clientConnection) && clientConnection != null) {
                         if (verbose) System.out.println("[Server] Client at " + clientConnection.getPort() + " successfully connected");
                         // TODO: Connection is successful
+                        clients.add(clientConnection);
                     } else {
                         if (verbose) System.out.println("[Server] Client rejected");
                         // TODO: Client rejected
@@ -89,8 +91,8 @@ public abstract class Server implements OwnerObject {
             }
 
             @Override
-            public boolean onComplete() {
-                return true;
+            public boolean onComplete(Exception exception) {
+                return (exception == null) ? true : false;
             }
 
             @Override

@@ -28,7 +28,7 @@ public abstract class Task {
         }
 
         @Override
-        public boolean onComplete() {
+        public boolean onComplete(Exception exception) {
             return true;
         }
     }
@@ -42,7 +42,7 @@ public abstract class Task {
 
     public abstract void run() throws IOException;
 
-    public abstract boolean onComplete();
+    public abstract boolean onComplete(Exception exception);
 
     // Optional method to override
     public void onInitialise() {}

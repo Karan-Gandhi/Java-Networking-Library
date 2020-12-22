@@ -11,6 +11,8 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Objects;
 
+import static com.karangandhi.networking.core.Debug.dbg;
+
 public class App implements Serializable {
     public int a = 234;
     public boolean b = false;
@@ -57,6 +59,10 @@ public class App implements Serializable {
             });
 
             client.connectToServer();
+            Thread.sleep(3000);
+//            for (Connection clients : server.getClients()) {
+//                dbg(clients);
+//            }
         } catch (Exception exception) {
             exception.printStackTrace();
             System.out.println("[Server] Server down");

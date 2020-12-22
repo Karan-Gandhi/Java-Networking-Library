@@ -35,8 +35,8 @@ public class Tasks {
             }
 
             @Override
-            public boolean onComplete() {
-                return true;
+            public boolean onComplete(Exception e) {
+                return e == null ? true : false;
             }
         }
     }

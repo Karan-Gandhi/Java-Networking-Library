@@ -3,7 +3,6 @@ package com.karangandhi.networking.core;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class Context {
     private ArrayDeque<Task> tasks;
@@ -29,23 +28,28 @@ public class Context {
         while(!tasks.isEmpty()) {
             Task currentTask = this.getNextTask();
             if (!currentTask.isAsynchronous) {
-                currentTask.onInitialise();
-                currentTask.run();
-
+                Exception exception = null;
+                try {
+                    currentTask.onInitialise();
+                    currentTask.run();
+                } catch (Exception e) {
+                    exception = e;
+                }
                 currentTask.markCompleted();
-                if (!currentTask.onComplete()) {
+                if (!currentTask.onComplete(exception)) {
                     throw new TaskNotCompletedException(currentTask);
                 }
             } else {
                 Thread thread = new Thread(() -> {
                     synchronized (currentTask) {
+                        Exception exception = null;
                         try {
                             currentTask.run();
-                        } catch (IOException Ignored) {
-                            // exception.printStackTrace();
+                        } catch (IOException ioException) {
+                            exception = ioException;
                         }
                         currentTask.markCompleted();
-                        if (!currentTask.onComplete()) try {
+                        if (!currentTask.onComplete(exception)) try {
                             throw new TaskNotCompletedException(currentTask);
                         } catch (TaskNotCompletedException e) {
                             e.printStackTrace();
