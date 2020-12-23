@@ -96,10 +96,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="719" y="322" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1608397830078" />
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1608534803815">
+    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser" timestamp="1608693122369">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1608534803815" />
+    <state x="765" y="226" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1608693122369" />
     <state x="743" y="389" width="433" height="308" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1606662648320">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -112,22 +112,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="690" y="267" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1606198524148" />
-    <state width="1921" height="984" key="GridCell.Tab.0.bottom" timestamp="1608623618444">
+    <state width="1921" height="984" key="GridCell.Tab.0.bottom" timestamp="1608693276090">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1921" height="984" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608623618444" />
-    <state width="1921" height="984" key="GridCell.Tab.0.center" timestamp="1608623618444">
+    <state width="1921" height="984" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608693276090" />
+    <state width="1921" height="984" key="GridCell.Tab.0.center" timestamp="1608693276089">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1921" height="984" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608623618444" />
-    <state width="1921" height="984" key="GridCell.Tab.0.left" timestamp="1608623618444">
+    <state width="1921" height="984" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608693276089" />
+    <state width="1921" height="984" key="GridCell.Tab.0.left" timestamp="1608693276089">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1921" height="984" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608623618444" />
-    <state width="1921" height="984" key="GridCell.Tab.0.right" timestamp="1608623618444">
+    <state width="1921" height="984" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608693276089" />
+    <state width="1921" height="984" key="GridCell.Tab.0.right" timestamp="1608693276089">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1921" height="984" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608623618444" />
+    <state width="1921" height="984" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608693276089" />
     <state x="540" y="255" key="IDE.errors.dialog" timestamp="1608400052762">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -149,9 +149,9 @@
     </state>
     <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1608607513905" />
     <state x="616" y="249" key="run.anything.popup/0.0.1920.1080@0.0.1920.1080" timestamp="1607152166442" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1608622220157">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1608691808853">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1608622220157" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1608691808853" />
   </component>
 </project>

@@ -8,6 +8,7 @@ public class Context {
     private ArrayDeque<Task> tasks;
     private ArrayList<Thread> workers;
     private OnStartCallback onStartCallback;
+    private Thread contextThread;
 
     public Context() {
         tasks = new ArrayDeque<>();
@@ -61,6 +62,7 @@ public class Context {
                 currentTask.onInitialise();
                 thread.start();
             }
+            // while (tasks.isEmpty()) { }
         }
     }
 

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static com.karangandhi.networking.core.Debug.dbg;
 
@@ -53,11 +54,11 @@ public abstract class Server implements OwnerObject {
     public abstract boolean onClientDisConnected(Connection clientConnection);
 
     public void detachConnection(Connection connection) {
-        clients.remove(clients);
+        clients.remove(connection);
     }
 
     public void sendMessage(Message message, Connection client) {
-        // TODO: send the message to the client
+        client.addMessage(message);
     }
     
     public void sendAll(Message message) {
@@ -143,5 +144,49 @@ public abstract class Server implements OwnerObject {
 
     public boolean isVerbose() {
         return this.verbose;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Server server = (Server) o;
+        return port == server.port &&
+                type == server.type &&
+                backlog == server.backlog &&
+                isRunning == server.isRunning &&
+                verbose == server.verbose &&
+                Objects.equals(readMessage, server.readMessage) &&
+                Objects.equals(writeMessage, server.writeMessage) &&
+                Objects.equals(clients, server.clients) &&
+                Objects.equals(ip, server.ip) &&
+                Objects.equals(serverSocket, server.serverSocket) &&
+                Objects.equals(ipInetAddress, server.ipInetAddress) &&
+                Objects.equals(serverContext, server.serverContext) &&
+                Objects.equals(serverThread, server.serverThread);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(readMessage, writeMessage, clients, ip, port, type, backlog, serverSocket, ipInetAddress, serverContext, serverThread, isRunning, verbose);
+    }
+
+    @Override
+    public String toString() {
+        return "Server{" +
+                "readMessage=" + readMessage +
+                ", writeMessage=" + writeMessage +
+                ", clients=" + clients +
+                ", ip='" + ip + '\'' +
+                ", port=" + port +
+                ", type=" + type +
+                ", backlog=" + backlog +
+                ", serverSocket=" + serverSocket +
+                ", ipInetAddress=" + ipInetAddress +
+                ", serverContext=" + serverContext +
+                ", serverThread=" + serverThread +
+                ", isRunning=" + isRunning +
+                ", verbose=" + verbose +
+                '}';
     }
 }

@@ -129,7 +129,7 @@ public class Connection<T extends OwnerObject> {
     public void writeMessage() {
         synchronized (outMessageQueue) {
             while (!outMessageQueue.isEmpty()) {
-                Message currentMessage = outMessageQueue.pop();
+                Message currentMessage = outMessageQueue.removeFirst();
                 try {
                     currentMessage.writeTo(socketOutputStream);
                 } catch (IOException exception) {

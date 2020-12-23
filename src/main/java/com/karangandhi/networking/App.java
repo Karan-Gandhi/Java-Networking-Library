@@ -68,7 +68,7 @@ public class App implements Serializable {
             client.connectToServer();
             // Need to add this as the client and the server are on the same file
             Thread.sleep(3000);
-            server.sendAll(new Message(test.a, "Hello world"));
+            server.sendMessage(new Message(test.a, "Hello world"), server.getClients().get(0));
             Thread.sleep(3000);
             Message me = Message.readFrom(socket.getInputStream());
             System.out.println(me);
