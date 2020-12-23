@@ -134,6 +134,12 @@ public abstract class Server implements OwnerObject {
         }
     }
 
+    public void removeClient(Connection client) {
+        // TODO: Complete this method
+        clients.remove(client);
+        client.close((Exception ignored) -> { });
+    }
+
     public ArrayList<Connection> getClients() {
         return clients;
     }
@@ -162,8 +168,6 @@ public abstract class Server implements OwnerObject {
         return port == server.port &&
                 type == server.type &&
                 backlog == server.backlog &&
-                isRunning == server.isRunning &&
-                verbose == server.verbose &&
                 Objects.equals(readMessage, server.readMessage) &&
                 Objects.equals(writeMessage, server.writeMessage) &&
                 Objects.equals(clients, server.clients) &&
