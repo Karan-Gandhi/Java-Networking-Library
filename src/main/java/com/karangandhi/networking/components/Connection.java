@@ -19,6 +19,8 @@ public class Connection<T extends OwnerObject> {
     public enum Owner { CLIENT, SERVER }
     public enum DefaultMessages { CONNECTED, DISCONNECTED, PING, AUTHORISATION }
 
+    public interface onCloseExceptions { public void onCloseException(Exception e); }
+
     private ArrayDeque<Message> outMessageQueue;
 
     private Context context;
@@ -135,16 +137,10 @@ public class Connection<T extends OwnerObject> {
                 try {
                     currentMessage.writeTo(socketOutputStream);
                 } catch (IOException exception) {
-                    this.close();
+                    this.close((Exception ignored) -> { });
                     ownerObject.detachConnection(this);
                 }
             }
-        }
-    }
-
-    public void readMessage() {
-        synchronized (socketInputStream) {
-
         }
     }
 
@@ -155,18 +151,22 @@ public class Connection<T extends OwnerObject> {
         }
     }
 
-    public void close() {
+    public void close(onCloseExceptions callback) {
         try {
             this.socketInputStream.close();
             this.socketOutputStream.close();
             this.ownerSocket.close();
         } catch (IOException exception) {
-            exception.printStackTrace();
+            callback.onCloseException(exception);
         }
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public Context getContext() {
+        return this.context;
     }
 
     public int getPort() {

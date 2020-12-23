@@ -30,9 +30,10 @@ public class Tasks {
             @Override
             public void run() throws IOException {
                 while (isAlive) {
-                    dbg("Waiting for message!");
-                    Message newMessage = Message.readFrom(this.inputStream);
-                    readMessageCallback.onMessageReceived(newMessage);
+                    synchronized (this.inputStream) {
+                        Message newMessage = Message.readFrom(this.inputStream);
+                        readMessageCallback.onMessageReceived(newMessage);
+                    }
                 }
             }
 

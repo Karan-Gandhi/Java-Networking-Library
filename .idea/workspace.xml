@@ -51,7 +51,26 @@
     <property name="show.migrate.to.gradle.popup" value="false" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Gradle.Java Networking Library [run]">
+    <configuration name="Java Networking Library [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" value="" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="Java Networking Library [run]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -74,6 +93,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.Java Networking Library [run]" />
+        <item itemvalue="Gradle.Java Networking Library [build]" />
       </list>
     </recent_temporary>
   </component>
@@ -112,22 +132,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="690" y="267" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1606198524148" />
-    <state width="1921" height="984" key="GridCell.Tab.0.bottom" timestamp="1608694634086">
+    <state width="1921" height="984" key="GridCell.Tab.0.bottom" timestamp="1608704572943">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1921" height="984" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608694634086" />
-    <state width="1921" height="984" key="GridCell.Tab.0.center" timestamp="1608694634086">
+    <state width="1921" height="984" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608704572943" />
+    <state width="1921" height="984" key="GridCell.Tab.0.center" timestamp="1608704572943">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1921" height="984" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608694634086" />
-    <state width="1921" height="984" key="GridCell.Tab.0.left" timestamp="1608694634086">
+    <state width="1921" height="984" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608704572943" />
+    <state width="1921" height="984" key="GridCell.Tab.0.left" timestamp="1608704572942">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1921" height="984" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608694634086" />
-    <state width="1921" height="984" key="GridCell.Tab.0.right" timestamp="1608694634086">
+    <state width="1921" height="984" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608704572942" />
+    <state width="1921" height="984" key="GridCell.Tab.0.right" timestamp="1608704572943">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1921" height="984" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608694634086" />
+    <state width="1921" height="984" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608704572943" />
     <state x="540" y="255" key="IDE.errors.dialog" timestamp="1608400052762">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

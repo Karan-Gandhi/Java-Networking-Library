@@ -5,7 +5,9 @@ import com.karangandhi.networking.components.Server;
 import com.karangandhi.networking.core.Context;
 import com.karangandhi.networking.core.Debug;
 import com.karangandhi.networking.core.Message;
+import com.karangandhi.networking.core.Task;
 import com.karangandhi.networking.utils.OwnerObject;
+import com.karangandhi.networking.utils.Tasks;
 import org.omg.PortableServer.THREAD_POLICY_ID;
 
 import java.io.*;
@@ -69,10 +71,15 @@ public class App implements Serializable {
             // Need to add this as the client and the server are on the same file
             Thread.sleep(3000);
             server.sendMessage(new Message(test.a, "Hello world"), server.getClients().get(0));
-            Thread.sleep(3000);
-            Message me = Message.readFrom(socket.getInputStream());
-            System.out.println(me);
+            Task task = new Tasks.ServerTasks.ReadMessageTask(client.getContext(), socket.getInputStream(), (Message m) -> { dbg(m); });
+            new Thread(() -> {
+                try {
+                    task.run();
+                } catch (IOException ignored) { }
+            }).start();
             client.addMessage(new Message(test.b, "Howdy"));
+            Thread.sleep(2000);
+            server.stop();
         } catch (Exception exception) {
             exception.printStackTrace();
             System.out.println("[Server] Server down");

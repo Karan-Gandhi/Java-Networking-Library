@@ -10,6 +10,10 @@ public class Context {
     private OnStartCallback onStartCallback;
     private boolean isRunning;
 
+    public static interface OnStartCallback {
+        void onStart();
+    }
+
     public Context() {
         tasks = new ArrayDeque<>();
         workers = new ArrayList<>();
@@ -88,11 +92,17 @@ public class Context {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void stop() {
-        // TODO: Complete the stop method
         for (Thread thread : workers) {
-//            if (thread.isAlive()) thread.stop();
+            if (thread.isAlive()) {
+                try {
+                    thread.interrupt();
+                    thread.stop();
+                } catch (Exception ignore) { }
+            }
         }
+        tasks.clear();
     }
 
     public boolean isRunning() {
@@ -105,9 +115,5 @@ public class Context {
 
     public void addOnStartCallback(OnStartCallback callback) {
         this.onStartCallback = callback;
-    }
-
-    public static interface OnStartCallback {
-        void onStart();
     }
 }

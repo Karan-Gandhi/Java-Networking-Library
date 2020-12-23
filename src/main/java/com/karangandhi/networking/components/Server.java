@@ -62,14 +62,16 @@ public abstract class Server implements OwnerObject {
     }
     
     public void sendAll(Message message) {
-        // TODO: send the message to all clients
         for (Connection client : this.clients) {
             client.addMessage(message);
         }
     }
     
     public void sendAll(Message message, Connection excludeClient) {
-        // TODO: send message to all clients except the excludedClient
+        for (Connection client : this.clients) {
+            if (client.equals(excludeClient)) continue;
+            client.addMessage(message);
+        }
     }
 
     public void start() throws IOException, TaskNotCompletedException {
@@ -122,7 +124,13 @@ public abstract class Server implements OwnerObject {
             serverContext.stop();
             serverSocket.close();
             serverThread.join();
-            if (verbose) System.out.println("[Server] Server down");
+            for (Connection client : this.clients) {
+                synchronized (client) {
+                    client.close((Exception ignored) -> {});
+                }
+            }
+            this.clients.clear();
+            if (verbose) System.out.println("[Server] Server stopped");
         }
     }
 
