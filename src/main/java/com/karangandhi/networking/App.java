@@ -35,7 +35,7 @@ public class App implements Serializable {
 
                 @Override
                 public void onMessageReceived(Message receivedMessage, Connection client) {
-                    System.out.println("Recieved: " + receivedMessage + " from: " + client);
+                    dbg("Recieved: " + receivedMessage + " from: " + client);
                 }
 
                 @Override
@@ -72,11 +72,11 @@ public class App implements Serializable {
             Thread.sleep(3000);
             Message me = Message.readFrom(socket.getInputStream());
             System.out.println(me);
+            client.addMessage(new Message(test.b, "Howdy"));
         } catch (Exception exception) {
             exception.printStackTrace();
             System.out.println("[Server] Server down");
         }
-
     }
 
 

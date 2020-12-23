@@ -8,12 +8,13 @@ public class Context {
     private ArrayDeque<Task> tasks;
     private ArrayList<Thread> workers;
     private OnStartCallback onStartCallback;
-    private Thread contextThread;
+    private boolean isRunning;
 
     public Context() {
         tasks = new ArrayDeque<>();
         workers = new ArrayList<>();
         onStartCallback = null;
+        isRunning = false;
     }
 
     public void addTask(Task t) {
@@ -25,6 +26,7 @@ public class Context {
     }
 
     public void start() throws TaskNotCompletedException, IOException {
+        isRunning = true;
         if (onStartCallback != null) this.onStartCallback.onStart();
         while(!tasks.isEmpty()) {
             Task currentTask = this.getNextTask();
@@ -62,8 +64,10 @@ public class Context {
                 currentTask.onInitialise();
                 thread.start();
             }
+            // if (tasks.isEmpty()) this.addTask(new Task.IDLE(this, (TaskNotCompletedException Ignored) -> { }));
             // while (tasks.isEmpty()) { }
         }
+        isRunning = false;
     }
 
     public int getTaskLength() {
@@ -89,6 +93,10 @@ public class Context {
         for (Thread thread : workers) {
 //            if (thread.isAlive()) thread.stop();
         }
+    }
+
+    public boolean isRunning() {
+        return isRunning;
     }
 
     public Task getFirstTask() {

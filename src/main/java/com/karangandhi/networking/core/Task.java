@@ -13,8 +13,15 @@ public abstract class Task {
 
     // TODO: fix the idle task
     public static class IDLE extends Task {
-        public IDLE(Context context) {
+        public interface Callback {
+            void run(TaskNotCompletedException e);
+        }
+
+        private Callback callback;
+
+        public IDLE(Context context, Callback callback) {
             super(true, context);
+            this.callback = callback;
         }
 
         @Override
@@ -23,7 +30,7 @@ public abstract class Task {
             try {
                 getContext().start();
             } catch (TaskNotCompletedException e) {
-                e.printStackTrace();
+                callback.run(e);
             }
         }
 

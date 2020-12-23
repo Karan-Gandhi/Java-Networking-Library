@@ -2,6 +2,7 @@ package com.karangandhi.networking.components;
 
 import com.karangandhi.networking.core.Context;
 import com.karangandhi.networking.core.Message;
+import com.karangandhi.networking.core.TaskNotCompletedException;
 import com.karangandhi.networking.utils.Constants;
 import com.karangandhi.networking.utils.OwnerObject;
 import com.karangandhi.networking.core.Task;
@@ -102,12 +103,13 @@ public class Connection<T extends OwnerObject> {
                         ownerObject.onMessageReceived(newMessage, this);
                     });
                     context.addTask(readMessage);
+                    if (!context.isRunning()) context.start();
                     return true;
                 } else {
                     if (ownerObject.isVerbose()) System.out.println("[Connection] Closing Connection - Authentication failed: ID = " + receivedTokenMessage.getId() + ", Recieved Token = " + receivedTokenMessage.messageBody + ", Expected Token = " + this.tokenReceived + ", Authentication Status = " + (receivedTokenMessage.messageBody.equals(tokenReceived)));
                     ownerSocket.close();
                 }
-            } catch (IOException exception) {
+            } catch (IOException | TaskNotCompletedException exception) {
                 return false;
             }
         }
@@ -184,7 +186,6 @@ public class Connection<T extends OwnerObject> {
                 ", context=" + context +
                 ", owner=" + owner +
                 ", ownerSocket=" + ownerSocket +
-                ", ownerObject=" + ownerObject +
                 ", id=" + id +
                 ", socketInputStream=" + socketInputStream +
                 ", socketOutputStream=" + socketOutputStream +

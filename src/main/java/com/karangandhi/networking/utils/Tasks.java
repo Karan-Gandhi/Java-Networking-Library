@@ -7,6 +7,8 @@ import com.karangandhi.networking.core.Message;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.karangandhi.networking.core.Debug.dbg;
+
 public class Tasks {
     public static class ServerTasks {
         public static class ReadMessageTask extends Task {
@@ -28,7 +30,7 @@ public class Tasks {
             @Override
             public void run() throws IOException {
                 while (isAlive) {
-                    System.out.println("[Server] Waiting for message!");
+                    dbg("Waiting for message!");
                     Message newMessage = Message.readFrom(this.inputStream);
                     readMessageCallback.onMessageReceived(newMessage);
                 }
