@@ -29,7 +29,7 @@ public class Context {
         return tasks.removeFirst();
     }
 
-    public void start() throws TaskNotCompletedException, IOException {
+    public void start() throws TaskNotCompletedException {
         isRunning = true;
         if (onStartCallback != null) this.onStartCallback.onStart();
         while(!tasks.isEmpty()) {

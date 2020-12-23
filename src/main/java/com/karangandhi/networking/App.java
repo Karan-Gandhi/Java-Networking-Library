@@ -41,8 +41,8 @@ public class App implements Serializable {
                 }
 
                 @Override
-                public boolean onClientDisConnected(Connection clientConnection) {
-                    return true;
+                public void onClientDisConnected(Connection clientConnection) {
+                    return;
                 }
             };
             server.start();

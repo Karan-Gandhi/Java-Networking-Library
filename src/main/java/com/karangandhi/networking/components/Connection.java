@@ -36,7 +36,7 @@ public class Connection<T extends OwnerObject> {
 
     public Connection(Context context, Owner owner, Socket socket, T ownerObject) throws IOException {
         this.context = context;
-        this.outMessageQueue = new ArrayDeque<Message>();
+        this.outMessageQueue = new ArrayDeque<>();
         this.owner = owner;
         this.ownerSocket = socket;
         this.ownerObject = ownerObject;
