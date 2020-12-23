@@ -12,23 +12,24 @@ import java.util.Objects;
 
 import static com.karangandhi.networking.core.Debug.dbg;
 
+@SuppressWarnings({ "unused", "rawtypes" })
 public abstract class Server implements OwnerObject {
     private ArrayDeque<Message> readMessage;
     private ArrayDeque<Message> writeMessage;
-    private ArrayList<Connection> clients;
+    private final ArrayList<Connection> clients;
 
-    private String ip;
-    private long port;
-    private int type;
-    private int backlog;
+    private final String ip;
+    private final long port;
+    private final int type;
+    private final int backlog;
 
-    private ServerSocket serverSocket;
-    private InetAddress ipInetAddress;
-    private Context serverContext;
+    private final ServerSocket serverSocket;
+    private final InetAddress ipInetAddress;
+    private final Context serverContext;
     private Thread serverThread;
 
     public boolean isRunning;
-    private boolean verbose;
+    private final boolean verbose;
 
     // Constants
     public static final int TCP = 0;
@@ -44,7 +45,7 @@ public abstract class Server implements OwnerObject {
         this.serverSocket = new ServerSocket(port, backlog, this.ipInetAddress);
         this.serverContext = new Context();
         this.verbose = verbose;
-        this.clients = new ArrayList<Connection>();
+        this.clients = new ArrayList<>();
     }
 
     public abstract boolean onClientConnected(Connection clientConnection);
@@ -82,7 +83,7 @@ public abstract class Server implements OwnerObject {
         if (verbose) System.out.println("[Server] Server started successfully");
     }
 
-    private void waitForClientConnection() throws IOException {
+    private void waitForClientConnection() {
         Task serverTask = new Task(true, serverContext) {
             @Override
             public void run() throws IOException {
@@ -102,7 +103,7 @@ public abstract class Server implements OwnerObject {
 
             @Override
             public boolean onComplete(Exception exception) {
-                return (exception == null) ? true : false;
+                return exception == null;
             }
 
             @Override
@@ -114,7 +115,7 @@ public abstract class Server implements OwnerObject {
     }
 
     private Connection onClientConnect(Socket clientSocket) throws IOException {
-        Connection<Server> connection = new Connection(serverContext, Connection.Owner.SERVER, clientSocket, this);
+        Connection<Server> connection = new Connection<>(serverContext, Connection.Owner.SERVER, clientSocket, this);
         return connection.connectToClient() ? connection : null;
     }
 
@@ -124,9 +125,9 @@ public abstract class Server implements OwnerObject {
             serverContext.stop();
             serverSocket.close();
             serverThread.join();
-            for (Connection client : this.clients) {
-                synchronized (client) {
-                    client.close((Exception ignored) -> {});
+            synchronized (this.clients) {
+                for (Connection client : this.clients) {
+                    client.close((Exception ignored) -> { });
                 }
             }
             this.clients.clear();
