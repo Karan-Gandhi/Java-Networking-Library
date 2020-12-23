@@ -47,38 +47,83 @@ public class App implements Serializable {
             };
             server.start();
 
-            Socket socket = new Socket("127.0.0.1", 8000);
-            Connection client = new Connection(new Context(), Connection.Owner.CLIENT, socket, new OwnerObject() {
+            {
+                Socket socket = new Socket("127.0.0.1", 8000);
+                Connection client = new Connection(new Context(), Connection.Owner.CLIENT, socket, new OwnerObject() {
 
-                @Override
-                public void onMessageReceived(Message receivedMessage, Connection client) {
-                    dbg(receivedMessage);
-                    return;
-                }
+                    @Override
+                    public void onMessageReceived(Message receivedMessage, Connection client) {
+                        dbg(receivedMessage);
+                        return;
+                    }
 
-                @Override
-                public boolean isVerbose() {
-                    return false;
-                }
+                    @Override
+                    public boolean isVerbose() {
+                        return false;
+                    }
 
-                @Override
-                public void detachConnection(Connection connection) {
-                    return;
-                }
-            });
+                    @Override
+                    public void detachConnection(Connection connection) {
+                        return;
+                    }
+                });
 
-            client.connectToServer();
-            // Need to add this as the client and the server are on the same file
-            Thread.sleep(3000);
-            server.sendMessage(new Message(test.a, "Hello world"), server.getClients().get(0));
-            Task task = new Tasks.ServerTasks.ReadMessageTask(client.getContext(), socket.getInputStream(), (Message m) -> { dbg(m); });
-            new Thread(() -> {
-                try {
-                    task.run();
-                } catch (IOException ignored) { }
-            }).start();
-            client.addMessage(new Message(test.b, "Howdy"));
-            Thread.sleep(2000);
+                client.connectToServer();
+                // Need to add this as the client and the server are on the same file
+                Thread.sleep(3000);
+                server.sendMessage(new Message(test.a, "Hello world"), server.getClients().get(0));
+                Task task = new Tasks.ServerTasks.ReadMessageTask(client.getContext(), socket.getInputStream(), (Message m) -> {
+                    dbg(m);
+                });
+                new Thread(() -> {
+                    try {
+                        task.run();
+                    } catch (IOException ignored) {
+                    }
+                }).start();
+//                server.removeClient(server.getClients().get(0));
+                client.addMessage(new Message(test.b, "Howdy"));
+                Thread.sleep(2000);
+            }
+
+            {
+                Socket socket = new Socket("127.0.0.1", 8000);
+                Connection client = new Connection(new Context(), Connection.Owner.CLIENT, socket, new OwnerObject() {
+
+                    @Override
+                    public void onMessageReceived(Message receivedMessage, Connection client) {
+                        dbg(receivedMessage);
+                        return;
+                    }
+
+                    @Override
+                    public boolean isVerbose() {
+                        return false;
+                    }
+
+                    @Override
+                    public void detachConnection(Connection connection) {
+                        return;
+                    }
+                });
+
+                client.connectToServer();
+                // Need to add this as the client and the server are on the same file
+                Thread.sleep(3000);
+                server.sendMessage(new Message(test.a, "Hello world"), server.getClients().get(0));
+                Task task = new Tasks.ServerTasks.ReadMessageTask(client.getContext(), socket.getInputStream(), (Message m) -> {
+                    dbg(m);
+                });
+                new Thread(() -> {
+                    try {
+                        task.run();
+                    } catch (IOException ignored) {
+                    }
+                }).start();
+//                server.removeClient(server.getClients().get(0));
+                client.addMessage(new Message(test.b, "Howdy"));
+                Thread.sleep(2000);
+            }
             server.stop();
         } catch (Exception exception) {
             exception.printStackTrace();

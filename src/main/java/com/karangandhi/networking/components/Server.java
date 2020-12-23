@@ -135,7 +135,7 @@ public abstract class Server implements OwnerObject {
     }
 
     public void removeClient(Connection client) {
-        // TODO: Complete this method
+        // TODO: Test this method
         clients.remove(client);
         client.close((Exception ignored) -> { });
     }

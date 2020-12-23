@@ -68,8 +68,6 @@ public class Context {
                 currentTask.onInitialise();
                 thread.start();
             }
-            // if (tasks.isEmpty()) this.addTask(new Task.IDLE(this, (TaskNotCompletedException Ignored) -> { }));
-            // while (tasks.isEmpty()) { }
         }
         isRunning = false;
     }
