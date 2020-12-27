@@ -25,11 +25,11 @@ public class App implements Serializable {
     }
 
     public static void main(String[] args) throws IOException {
-        Debug.setDebug(true);
+//        Debug.setDebug(true);
 
         Server server = null;
         try {
-            server = new Server("127.0.0.1", 8000, Server.TCP, 100, true) {
+            server = new Server("127.0.0.1", 8000, Server.TCP, 0,100, true) {
                 @Override
                 public boolean onClientConnected(Connection clientConnection) {
                     return true;
@@ -47,87 +47,116 @@ public class App implements Serializable {
             };
             server.start();
 
-            {
-                Socket socket = new Socket("127.0.0.1", 8000);
-                Connection client = new Connection(new Context(), Connection.Owner.CLIENT, socket, new OwnerObject() {
-
-                    @Override
-                    public void onMessageReceived(Message receivedMessage, Connection client) {
-                        dbg(receivedMessage);
-                        return;
-                    }
-
-                    @Override
-                    public boolean isVerbose() {
-                        return false;
-                    }
-
-                    @Override
-                    public void detachConnection(Connection connection) {
-                        return;
-                    }
-                });
-
-                client.connectToServer();
-                // Need to add this as the client and the server are on the same file
-                Thread.sleep(3000);
-                server.sendMessage(new Message(test.a, "Hello world"), server.getClients().get(0));
-                Task task = new Tasks.ServerTasks.ReadMessageTask(client.getContext(), socket.getInputStream(), (Message m) -> {
-                    dbg(client.getId() + ": " + m);
-                });
+            for (int x = 0; x < 10000; x++) {
+                Server finalServer = server;
                 new Thread(() -> {
+                    Socket socket = null;
                     try {
-                        task.run();
-                    } catch (IOException ignored) {
+                        socket = new Socket("127.0.0.1", 8000);
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
                     }
+                    Connection client = null;
+                    try {
+                        client = new Connection(new Context(), Connection.Owner.CLIENT, socket, new OwnerObject() {
+
+                            @Override
+                            public void onMessageReceived(Message receivedMessage, Connection client) {
+                                dbg(receivedMessage);
+                                return;
+                            }
+
+                            @Override
+                            public boolean isVerbose() {
+                                return false;
+                            }
+
+                            @Override
+                            public void detachConnection(Connection connection) {
+                                return;
+                            }
+                        });
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
+
+                    client.connectToServer();
+                    // Need to add this as the client and the server are on the same file
+                    finalServer.sendMessage(new Message(test.a, "Hello world"), finalServer.getClients().get(0));
+                    Task task = null;
+                    try {
+                        Connection finalClient = client;
+                        task = new Tasks.ServerTasks.ReadMessageTask(client.getContext(), socket.getInputStream(), (Message m) -> {
+                            dbg(finalClient.getId() + ": " + m);
+                        });
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+                    }
+                    Task finalTask = task;
+                    new Thread(() -> {
+                        try {
+                            finalTask.run();
+                        } catch (IOException ignored) {
+                        }
+                    }).start();
+    //                server.removeClient(server.getClients().get(0));
+                    // sending 100 messages fast lets see how this holds up
+                    Connection finalClient1 = client;
+                    new Thread(() -> {
+                        for (int i = 0; i < 1000; i++) finalClient1.addMessage(new Message(test.c, "ads"));
+                        System.out.println("[DONE]");
+                    }).start();
                 }).start();
-//                server.removeClient(server.getClients().get(0));
-                // sending 100 messages fast lets see how this holds up
-                Thread.sleep(2000);
             }
 
-            {
-                Socket socket = new Socket("127.0.0.1", 8000);
-                Connection client = new Connection(new Context(), Connection.Owner.CLIENT, socket, new OwnerObject() {
+//            {
+//                Socket socket = new Socket("127.0.0.1", 8000);
+//                Connection client = new Connection(new Context(), Connection.Owner.CLIENT, socket, new OwnerObject() {
+//
+//                    @Override
+//                    public void onMessageReceived(Message receivedMessage, Connection client) {
+//                        dbg(receivedMessage);
+//                        return;
+//                    }
+//
+//                    @Override
+//                    public boolean isVerbose() {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public void detachConnection(Connection connection) {
+//                        return;
+//                    }
+//                });
+//
+//                client.connectToServer();
+//                // Need to add this as the client and the server are on the same file
+//                server.sendMessage(new Message(test.a, "Hello world"), server.getClients().get(0));
+//                Task task = new Tasks.ServerTasks.ReadMessageTask(client.getContext(), socket.getInputStream(), (Message m) -> {
+//                    dbg(client.getId() + ": " + m);
+//                });
+//                new Thread(() -> {
+//                    try {
+//                        task.run();
+//                    } catch (IOException ignored) {
+//                    }
+//                }).start();
+//                new Thread(() -> {
+//                    for (int i = 0; i < 10000; i++) client.addMessage(new Message(test.c, "ads"));
+//                    System.out.println("[DONE]");
+//                }).start();
+////                server.removeClient(server.getClients().get(0));
+//                client.addMessage(new Message(test.b, "Howdy"));
+//            }
 
-                    @Override
-                    public void onMessageReceived(Message receivedMessage, Connection client) {
-                        dbg(receivedMessage);
-                        return;
-                    }
+//            Server finalServer = server;
+//            new Thread(() -> {
+//                for (int i = 0; i < 10000; i++) finalServer.sendAll(new Message(test.b, "Howdy"));
+//                System.out.println("[DONE]");
+//            }).start();
 
-                    @Override
-                    public boolean isVerbose() {
-                        return false;
-                    }
-
-                    @Override
-                    public void detachConnection(Connection connection) {
-                        return;
-                    }
-                });
-
-                client.connectToServer();
-                // Need to add this as the client and the server are on the same file
-                Thread.sleep(3000);
-                server.sendMessage(new Message(test.a, "Hello world"), server.getClients().get(0));
-                Task task = new Tasks.ServerTasks.ReadMessageTask(client.getContext(), socket.getInputStream(), (Message m) -> {
-                    dbg(client.getId() + ": " + m);
-                });
-                new Thread(() -> {
-                    try {
-                        task.run();
-                    } catch (IOException ignored) {
-                    }
-                }).start();
-//                server.removeClient(server.getClients().get(0));
-                client.addMessage(new Message(test.b, "Howdy"));
-                Thread.sleep(2000);
-            }
-
-            for (int i = 0; i < 10000; i++) server.sendAll(new Message(test.b, "Howdy"));
-
-            server.stop();
+//            server.stop();
         } catch (Exception exception) {
             exception.printStackTrace();
             System.out.println("[Server] Server down");
