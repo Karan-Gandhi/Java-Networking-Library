@@ -73,7 +73,7 @@ public class App implements Serializable {
                 Thread.sleep(3000);
                 server.sendMessage(new Message(test.a, "Hello world"), server.getClients().get(0));
                 Task task = new Tasks.ServerTasks.ReadMessageTask(client.getContext(), socket.getInputStream(), (Message m) -> {
-                    dbg(m);
+                    dbg(client.getId() + ": " + m);
                 });
                 new Thread(() -> {
                     try {
@@ -82,7 +82,7 @@ public class App implements Serializable {
                     }
                 }).start();
 //                server.removeClient(server.getClients().get(0));
-                client.addMessage(new Message(test.b, "Howdy"));
+                // sending 100 messages fast lets see how this holds up
                 Thread.sleep(2000);
             }
 
@@ -112,7 +112,7 @@ public class App implements Serializable {
                 Thread.sleep(3000);
                 server.sendMessage(new Message(test.a, "Hello world"), server.getClients().get(0));
                 Task task = new Tasks.ServerTasks.ReadMessageTask(client.getContext(), socket.getInputStream(), (Message m) -> {
-                    dbg(m);
+                    dbg(client.getId() + ": " + m);
                 });
                 new Thread(() -> {
                     try {
@@ -124,6 +124,9 @@ public class App implements Serializable {
                 client.addMessage(new Message(test.b, "Howdy"));
                 Thread.sleep(2000);
             }
+
+            for (int i = 0; i < 10000; i++) server.sendAll(new Message(test.b, "Howdy"));
+
             server.stop();
         } catch (Exception exception) {
             exception.printStackTrace();
