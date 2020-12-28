@@ -29,7 +29,7 @@ public class App implements Serializable {
 
         Server server = null;
         try {
-            server = new Server("127.0.0.1", 8000, Server.TCP, 100, true) {
+            server = new Server("127.0.0.1", 8000, Server.TCP, 10000, true) {
                 @Override
                 public boolean onClientConnected(Connection clientConnection) {
                     return true;

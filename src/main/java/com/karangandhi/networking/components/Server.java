@@ -141,34 +141,37 @@ public abstract class Server implements OwnerObject {
      * This method waits for a client to connect
      */
     private void waitForClientConnection() {
-        Task serverTask = new Task(true, serverContext) {
-            @Override
-            public void run() throws IOException {
-                while(isRunning) {
-                    Socket socket = serverSocket.accept();
-                    Connection clientConnection = onClientConnect(socket);
-                    if (onClientConnected(clientConnection) && clientConnection != null) {
-                        if (verbose) System.out.println("[Server] Client at " + clientConnection.getPort() + " successfully connected");
-                        // TODO: Connection is successful
-                        clients.add(clientConnection);
-                    } else {
-                        if (verbose) System.out.println("[Server] Client rejected");
-                        // TODO: Client rejected
+        for (int i = 0; i < ((int) (this.backlog / 1000) == 0 ? 1 : this.backlog / 1000); i++) {
+            Task serverTask = new Task(true, serverContext) {
+                @Override
+                public void run() throws IOException {
+                    while (isRunning) {
+                        Socket socket = serverSocket.accept();
+                        Connection clientConnection = onClientConnect(socket);
+                        if (onClientConnected(clientConnection) && clientConnection != null) {
+                            if (verbose)
+                                System.out.println("[Server] Client at " + clientConnection.getPort() + " successfully connected");
+                            // TODO: Connection is successful
+                            clients.add(clientConnection);
+                        } else {
+                            if (verbose) System.out.println("[Server] Client rejected");
+                            // TODO: Client rejected
+                        }
                     }
                 }
-            }
 
-            @Override
-            public boolean onComplete(Exception exception) {
-                return exception == null;
-            }
+                @Override
+                public boolean onComplete(Exception exception) {
+                    return exception == null;
+                }
 
-            @Override
-            public void onInitialise() {
-                Server.this.serverThread = this.getTaskThread();
-            }
-        };
-        serverContext.addTask(serverTask);
+                @Override
+                public void onInitialise() {
+                    Server.this.serverThread = this.getTaskThread();
+                }
+            };
+            serverContext.addTask(serverTask);
+        }
     }
 
     /**
