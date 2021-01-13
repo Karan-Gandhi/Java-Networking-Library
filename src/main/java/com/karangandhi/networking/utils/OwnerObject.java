@@ -6,9 +6,6 @@ import com.karangandhi.networking.core.Message;
 import java.util.ArrayDeque;
 
 public interface OwnerObject {
-    ArrayDeque<Message> readMessage = new ArrayDeque<>();
-    ArrayDeque<Message> writeMessage = new ArrayDeque<>();
-
     public abstract void onMessageReceived(Message receivedMessage, Connection client);
     public boolean isVerbose();
     public void detachConnection(Connection connection);

@@ -15,15 +15,12 @@ import static com.karangandhi.networking.core.Debug.dbg;
 /**
  * This is the Server class and is used to create the server
  */
-@SuppressWarnings({ "unused", "rawtypes" })
+@SuppressWarnings({ "", "rawtypes" })
 public abstract class Server implements OwnerObject {
-    private ArrayDeque<Message> readMessage;
-    private ArrayDeque<Message> writeMessage;
     private final ArrayList<Connection> clients;
 
     private final String ip;
     private final long port;
-    private final int type;
     private final int backlog;
 
     private final ServerSocket serverSocket;
@@ -34,23 +31,19 @@ public abstract class Server implements OwnerObject {
     public boolean isRunning;
     private final boolean verbose;
 
-    // Constants
-    public static final int TCP = 0;
-    public static final int HTTP = 1;
-
     /**
+     * Creates an Instance of the server
+     *
      * @param ip            The address of the server
      * @param port          The port at the address of the server
-     * @param type
      * @param backlog       The backlog that the server can handle
      * @param verbose       This is true if you want the server to be verbose
-     * @throws IOException  Throws an exception if the server exists on the given ip and port
+     * @throws IOException  Throws an exception if the server exists on the given ip and port TODO: UnknownHostException
      */
-    public Server(String ip, int port, int type, int backlog, boolean verbose) throws IOException {
+    public Server(String ip, int port, int backlog, boolean verbose) throws IOException {
         this.ip = ip;
         this.port = port;
         this.isRunning = false;
-        this.type = type;
         this.backlog = backlog;
         this.ipInetAddress = InetAddress.getByName(ip);
         this.serverSocket = new ServerSocket(port, backlog, this.ipInetAddress);
@@ -259,10 +252,7 @@ public abstract class Server implements OwnerObject {
         if (o == null || getClass() != o.getClass()) return false;
         Server server = (Server) o;
         return port == server.port &&
-                type == server.type &&
                 backlog == server.backlog &&
-                Objects.equals(readMessage, server.readMessage) &&
-                Objects.equals(writeMessage, server.writeMessage) &&
                 Objects.equals(clients, server.clients) &&
                 Objects.equals(ip, server.ip) &&
                 Objects.equals(serverSocket, server.serverSocket) &&
@@ -273,18 +263,15 @@ public abstract class Server implements OwnerObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(readMessage, writeMessage, clients, ip, port, type, backlog, serverSocket, ipInetAddress, serverContext, serverThread, isRunning, verbose);
+        return Objects.hash(clients, ip, port, backlog, serverSocket, ipInetAddress, serverContext, serverThread, isRunning, verbose);
     }
 
     @Override
     public String toString() {
         return "Server{" +
-                "readMessage=" + readMessage +
-                ", writeMessage=" + writeMessage +
                 ", clients=" + clients +
                 ", ip='" + ip + '\'' +
                 ", port=" + port +
-                ", type=" + type +
                 ", backlog=" + backlog +
                 ", serverSocket=" + serverSocket +
                 ", ipInetAddress=" + ipInetAddress +

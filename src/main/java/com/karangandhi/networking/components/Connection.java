@@ -54,7 +54,7 @@ public class Connection<T extends OwnerObject> {
                 Message newMessage = new Message(Connection.DefaultMessages.AUTHORISATION, authenticationToken);
                 newMessage.writeTo(socketOutputStream);
 
-                dbg("authenticationTokenRecieved = " + authenticationToken);
+//                dbg("authenticationTokenRecieved = " + authenticationToken);
 
                 this.tokenReceived = this.encode(authenticationToken);
                 this.tokenSent = encode(tokenReceived);
@@ -64,13 +64,16 @@ public class Connection<T extends OwnerObject> {
                 Message statusMessage = Message.readFrom(socketInputStream);
 
                 if (statusMessage.getId() == DefaultMessages.CONNECTED) {
-                    // TODO: Add the readMessage Task
-                    dbg("Status Message = " + statusMessage);
+                    Task readMessage = new Tasks.ReadMessageTask(context, socketInputStream, (Message recievedMessage) -> {
+                        ownerObject.onMessageReceived(recievedMessage, this);
+                    });
+                    context.addTask(readMessage);
+                    if (!context.isRunning()) context.start();
                     return true;
                 } else {
                     return false;
                 }
-            } catch (IOException exception) {
+            } catch (IOException | TaskNotCompletedException exception) {
                 return false;
             }
         }
@@ -90,8 +93,8 @@ public class Connection<T extends OwnerObject> {
                 Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
                 authenticationMessage.writeTo(socketOutputStream);
 
-                dbg("tokenSent = " + tokenSent + ", tokenExpected = " + tokenReceived);
-                dbg("Header size = " + authenticationMessage.getHeaderSize());
+//                dbg("tokenSent = " + tokenSent + ", tokenExpected = " + tokenReceived);
+//                dbg("Header size = " + authenticationMessage.getHeaderSize());
 
                 Message<DefaultMessages, Long> receivedTokenMessage = Message.readFrom(socketInputStream);
 
@@ -99,9 +102,9 @@ public class Connection<T extends OwnerObject> {
                     Message statusMessage = new Message<DefaultMessages, Serializable>(DefaultMessages.CONNECTED, null);
                     statusMessage.writeTo(socketOutputStream);
 
-                    dbg("statusMessageHeaderSize = " + statusMessage.getHeaderSize());
+//                    dbg("statusMessageHeaderSize = " + statusMessage.getHeaderSize());
 
-                    Task readMessage = new Tasks.ServerTasks.ReadMessageTask(context, socketInputStream, (Message newMessage) -> {
+                    Task readMessage = new Tasks.ReadMessageTask(context, socketInputStream, (Message newMessage) -> {
                         ownerObject.onMessageReceived(newMessage, this);
                     });
                     context.addTask(readMessage);
