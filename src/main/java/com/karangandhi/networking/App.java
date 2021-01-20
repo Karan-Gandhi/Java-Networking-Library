@@ -26,13 +26,14 @@ public class App implements Serializable {
     }
 
     public static void main(String[] args) throws IOException {
-        Debug.setDebug(true);
+//        Debug.setDebug(true);
 
         Server server = null;
         try {
             server = new Server("127.0.0.1", 8000, 10000, true) {
                 @Override
                 public boolean onClientConnected(Connection clientConnection) {
+                    dbg("Client Connected");
                     return true;
                 }
 
@@ -43,7 +44,7 @@ public class App implements Serializable {
 
                 @Override
                 public void onClientDisConnected(Connection clientConnection) {
-                    return;
+                    dbg("Disconnected");
                 }
             };
             server.start();
@@ -52,6 +53,7 @@ public class App implements Serializable {
 
                 @Override
                 public boolean onConnected() {
+                    dbg("Client Connected");
                     return true;
                 }
 
@@ -62,13 +64,16 @@ public class App implements Serializable {
 
                 @Override
                 public void onDisConnected(Connection clientConnection) {
-
+                    dbg("Disconnected");
                 }
             };
             client.start();
             Thread.sleep(1000);
             client.sendMessage(new Message(test.b, "Hello, world"));
             server.sendAll(new Message(test.b, "Howdy"));
+            Thread.sleep(100);
+            client.disconnect();
+//            server.removeClient(client.getConnection());
 //            server.stop();
         } catch (Exception exception) {
             exception.printStackTrace();

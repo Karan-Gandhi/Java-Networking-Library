@@ -17,7 +17,7 @@ import static com.karangandhi.networking.core.Debug.dbg;
 
 public class Connection<T extends OwnerObject> {
     public enum Owner { CLIENT, SERVER }
-    public enum DefaultMessages { CONNECTED, DISCONNECTED, PING, AUTHORISATION }
+    public enum DefaultMessages { CONNECTED, AUTHORISATION }
 
     public interface onCloseExceptions { public void onCloseException(Exception e); }
 
@@ -54,8 +54,6 @@ public class Connection<T extends OwnerObject> {
                 Message newMessage = new Message(Connection.DefaultMessages.AUTHORISATION, authenticationToken);
                 newMessage.writeTo(socketOutputStream);
 
-//                dbg("authenticationTokenRecieved = " + authenticationToken);
-
                 this.tokenReceived = this.encode(authenticationToken);
                 this.tokenSent = encode(tokenReceived);
 
@@ -66,6 +64,8 @@ public class Connection<T extends OwnerObject> {
                 if (statusMessage.getId() == DefaultMessages.CONNECTED) {
                     Task readMessage = new Tasks.ReadMessageTask(context, socketInputStream, (Message recievedMessage) -> {
                         ownerObject.onMessageReceived(recievedMessage, this);
+                    }, () -> {
+                        Connection.this.ownerObject.clientConnectionClosed(Connection.this);
                     });
                     context.addTask(readMessage);
                     if (!context.isRunning()) context.start();
@@ -106,6 +106,8 @@ public class Connection<T extends OwnerObject> {
 
                     Task readMessage = new Tasks.ReadMessageTask(context, socketInputStream, (Message newMessage) -> {
                         ownerObject.onMessageReceived(newMessage, this);
+                    }, () -> {
+                        Connection.this.ownerObject.clientConnectionClosed(Connection.this);
                     });
                     context.addTask(readMessage);
                     if (!context.isRunning()) context.start();
@@ -119,18 +121,6 @@ public class Connection<T extends OwnerObject> {
             }
         }
         return false;
-    }
-
-    public void disconnectFromServer() {
-        if (owner == Owner.CLIENT) {
-
-        }
-    }
-    
-    public void disconnectFromClient() {
-        if (owner == Owner.SERVER) {
-
-        }
     }
     
     public void writeMessage() {

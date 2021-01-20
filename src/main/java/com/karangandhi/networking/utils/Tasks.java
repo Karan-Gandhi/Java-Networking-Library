@@ -15,14 +15,20 @@ public class Tasks {
             void onMessageReceived(Message message);
         }
 
+        public static interface DisconnectCallback {
+            void onDisconnect();
+        }
+
         private InputStream inputStream;
         private Callback readMessageCallback;
+        private DisconnectCallback disconnect;
         public boolean isAlive;
 
-        public ReadMessageTask(Context context, InputStream inputStream, Callback callback) {
+        public ReadMessageTask(Context context, InputStream inputStream, Callback callback, DisconnectCallback disconnect) {
             super(true, context);
             this.inputStream = inputStream;
             this.readMessageCallback = callback;
+            this.disconnect = disconnect;
             this.isAlive = true;
         }
 
@@ -38,7 +44,8 @@ public class Tasks {
 
         @Override
         public boolean onComplete(Exception e) {
-            return e == null ? true : false;
+            if (e != null) disconnect.onDisconnect();
+            return true;
         }
     }
 }

@@ -52,10 +52,10 @@ public class Context {
                         Exception exception = null;
                         try {
                             currentTask.run();
+                            currentTask.markCompleted();
                         } catch (IOException ioException) {
                             exception = ioException;
                         }
-                        currentTask.markCompleted();
                         if (!currentTask.onComplete(exception)) try {
                             throw new TaskNotCompletedException(currentTask);
                         } catch (TaskNotCompletedException e) {

@@ -12,8 +12,8 @@ import java.net.Socket;
 
 import static com.karangandhi.networking.core.Debug.dbg;
 
-public abstract class Client implements OwnerObject {
-    private Connection<Client> serverConnection;
+public abstract class TCPClient implements OwnerObject {
+    private Connection<TCPClient> serverConnection;
     private Context context;
     private Socket clientSocket;
 
@@ -23,7 +23,7 @@ public abstract class Client implements OwnerObject {
     private boolean verbose;
     public boolean isRunning;
 
-    public Client(String ip, int port, boolean verbose) throws IOException {
+    public TCPClient(String ip, int port, boolean verbose) throws IOException {
         this.verbose = verbose;
         this.context = new Context();
         this.clientSocket = new Socket(ip, port);
@@ -39,6 +39,11 @@ public abstract class Client implements OwnerObject {
 
     public abstract void onDisConnected(Connection clientConnection);
 
+    public void clientConnectionClosed(Connection connection) {
+        if (verbose) System.out.println("[Client] Disconnected from server");
+        this.onDisConnected(connection);
+    }
+
     @Override
     public void detachConnection(Connection connection) { }
 
@@ -51,7 +56,7 @@ public abstract class Client implements OwnerObject {
         boolean connectionStatus = this.serverConnection.connectToServer();
         if (connectionStatus && onConnected()) {
                 // TODO: Connection is successful
-            if (verbose) System.out.println("[Client] Client started successfully");
+            if (verbose) System.out.println("[Client] Client connected to server");
         } else {
             // TODO: Connection is unsuccessful
             serverConnection.close((Exception Ignored) -> { });
@@ -59,12 +64,16 @@ public abstract class Client implements OwnerObject {
         this.context.start();
     }
 
-    public void stop() {
+    public void disconnect() {
         serverConnection.close((Exception ignored) -> { });
     }
 
     @Override
     public boolean isVerbose() {
         return this.verbose;
+    }
+
+    public Connection getConnection() {
+        return this.serverConnection;
     }
 }

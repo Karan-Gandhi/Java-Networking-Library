@@ -13,10 +13,10 @@ import java.util.Objects;
 import static com.karangandhi.networking.core.Debug.dbg;
 
 /**
- * This is the Server class and is used to create the server
+ * This is the Server class and is used to create the tcp server
  */
 @SuppressWarnings({ "", "rawtypes" })
-public abstract class Server implements OwnerObject {
+public abstract class TCPServer implements OwnerObject {
     private final ArrayList<Connection> clients;
 
     private final String ip;
@@ -40,7 +40,7 @@ public abstract class Server implements OwnerObject {
      * @param verbose       This is true if you want the server to be verbose
      * @throws IOException  Throws an exception if the server exists on the given ip and port TODO: UnknownHostException
      */
-    public Server(String ip, int port, int backlog, boolean verbose) throws IOException {
+    public TCPServer(String ip, int port, int backlog, boolean verbose) throws IOException {
         this.ip = ip;
         this.port = port;
         this.isRunning = false;
@@ -160,11 +160,16 @@ public abstract class Server implements OwnerObject {
 
                 @Override
                 public void onInitialise() {
-                    Server.this.serverThread = this.getTaskThread();
+                    TCPServer.this.serverThread = this.getTaskThread();
                 }
             };
             serverContext.addTask(serverTask);
         }
+    }
+
+    public void clientConnectionClosed(Connection connection) {
+        if (verbose) System.out.println("[Server] Client at " + connection.getPort() + " disconnected");
+        this.onClientDisConnected(connection);
     }
 
     /**
@@ -173,7 +178,7 @@ public abstract class Server implements OwnerObject {
      * @throws IOException      Throws an exception if the socket is already closed
      */
     private Connection onClientConnect(Socket clientSocket) throws IOException {
-        Connection<Server> connection = new Connection<>(serverContext, Connection.Owner.SERVER, clientSocket, this);
+        Connection<TCPServer> connection = new Connection<>(serverContext, Connection.Owner.SERVER, clientSocket, this);
         return connection.connectToClient() ? connection : null;
     }
 
@@ -250,7 +255,7 @@ public abstract class Server implements OwnerObject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Server server = (Server) o;
+        TCPServer server = (TCPServer) o;
         return port == server.port &&
                 backlog == server.backlog &&
                 Objects.equals(clients, server.clients) &&
