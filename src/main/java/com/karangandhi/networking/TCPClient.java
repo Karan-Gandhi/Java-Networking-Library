@@ -1,16 +1,12 @@
-package com.karangandhi.networking.components;
+package com.karangandhi.networking;
 
 import com.karangandhi.networking.core.Context;
-import com.karangandhi.networking.core.Message;
-import com.karangandhi.networking.core.Task;
+import com.karangandhi.networking.utils.Message;
 import com.karangandhi.networking.core.TaskNotCompletedException;
 import com.karangandhi.networking.utils.OwnerObject;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
-
-import static com.karangandhi.networking.core.Debug.dbg;
 
 public abstract class TCPClient implements OwnerObject {
     private Connection<TCPClient> serverConnection;
@@ -44,7 +40,6 @@ public abstract class TCPClient implements OwnerObject {
         this.onDisConnected(connection);
     }
 
-    @Override
     public void detachConnection(Connection connection) { }
 
     public void sendMessage(Message message) {

@@ -1,9 +1,8 @@
-package com.karangandhi.networking.components;
+package com.karangandhi.networking;
 
 import com.karangandhi.networking.core.Context;
-import com.karangandhi.networking.core.Message;
+import com.karangandhi.networking.utils.Message;
 import com.karangandhi.networking.core.TaskNotCompletedException;
-import com.karangandhi.networking.utils.Constants;
 import com.karangandhi.networking.utils.OwnerObject;
 import com.karangandhi.networking.core.Task;
 import com.karangandhi.networking.utils.Tasks;
@@ -12,8 +11,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.UUID;
-
-import static com.karangandhi.networking.core.Debug.dbg;
 
 public class Connection<T extends OwnerObject> {
     public enum Owner { CLIENT, SERVER }

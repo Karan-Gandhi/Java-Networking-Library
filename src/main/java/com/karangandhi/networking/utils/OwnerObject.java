@@ -1,9 +1,6 @@
 package com.karangandhi.networking.utils;
 
-import com.karangandhi.networking.components.Connection;
-import com.karangandhi.networking.core.Message;
-
-import java.util.ArrayDeque;
+import com.karangandhi.networking.Connection;
 
 public interface OwnerObject {
     public abstract void onMessageReceived(Message receivedMessage, Connection client);

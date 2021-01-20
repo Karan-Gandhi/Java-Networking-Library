@@ -1,4 +1,4 @@
-package com.karangandhi.networking.core;
+package com.karangandhi.networking.utils;
 
 import java.io.*;
 import java.util.Objects;

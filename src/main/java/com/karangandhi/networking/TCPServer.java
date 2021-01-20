@@ -1,16 +1,13 @@
-package com.karangandhi.networking.components;
+package com.karangandhi.networking;
 
 import com.karangandhi.networking.core.*;
-import com.karangandhi.networking.core.Message;
+import com.karangandhi.networking.utils.Message;
 import com.karangandhi.networking.utils.OwnerObject;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Objects;
-
-import static com.karangandhi.networking.core.Debug.dbg;
 
 /**
  * This is the Server class and is used to create the tcp server
@@ -38,7 +35,7 @@ public abstract class TCPServer implements OwnerObject {
      * @param port          The port at the address of the server
      * @param backlog       The backlog that the server can handle
      * @param verbose       This is true if you want the server to be verbose
-     * @throws IOException  Throws an exception if the server exists on the given ip and port TODO: UnknownHostException
+     * @throws IOException  Throws an exception if the server exists on the given ip and port
      */
     public TCPServer(String ip, int port, int backlog, boolean verbose) throws IOException {
         this.ip = ip;

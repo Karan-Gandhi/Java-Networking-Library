@@ -1,18 +1,8 @@
 package com.karangandhi.networking;
 
-import com.karangandhi.networking.components.Client;
-import com.karangandhi.networking.components.Connection;
-import com.karangandhi.networking.components.Server;
-import com.karangandhi.networking.core.Context;
-import com.karangandhi.networking.core.Debug;
-import com.karangandhi.networking.core.Message;
-import com.karangandhi.networking.core.Task;
-import com.karangandhi.networking.utils.OwnerObject;
-import com.karangandhi.networking.utils.Tasks;
-import org.omg.PortableServer.THREAD_POLICY_ID;
+import com.karangandhi.networking.utils.Message;
 
 import java.io.*;
-import java.net.Socket;
 import java.util.Objects;
 
 import static com.karangandhi.networking.core.Debug.dbg;
@@ -28,9 +18,9 @@ public class App implements Serializable {
     public static void main(String[] args) throws IOException {
 //        Debug.setDebug(true);
 
-        Server server = null;
+        TCPServer server = null;
         try {
-            server = new Server("127.0.0.1", 8000, 10000, true) {
+            server = new TCPServer("127.0.0.1", 8000, 10000, true) {
                 @Override
                 public boolean onClientConnected(Connection clientConnection) {
                     dbg("Client Connected");
@@ -49,7 +39,7 @@ public class App implements Serializable {
             };
             server.start();
 
-            Client client = new Client("127.0.0.1", 8000, true) {
+            TCPClient client = new TCPClient("127.0.0.1", 8000, true) {
 
                 @Override
                 public boolean onConnected() {
@@ -74,7 +64,7 @@ public class App implements Serializable {
             Thread.sleep(100);
             client.disconnect();
 //            server.removeClient(client.getConnection());
-//            server.stop();
+            server.stop();
         } catch (Exception exception) {
             exception.printStackTrace();
             System.out.println("[Server] Server down");
