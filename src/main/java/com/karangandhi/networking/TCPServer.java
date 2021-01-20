@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * This is the Server class and is used to create the tcp server
  */
-@SuppressWarnings({ "", "rawtypes" })
+@SuppressWarnings({ "rawtypes" })
 public abstract class TCPServer implements OwnerObject {
     private final ArrayList<Connection> clients;
 
@@ -164,8 +164,16 @@ public abstract class TCPServer implements OwnerObject {
         }
     }
 
+    /**
+     * This method is called when the client closes the connection
+     *
+     * @param connection    Closes the connection and notifies the server that the client has been disconnected
+     */
+    @Override
     public void clientConnectionClosed(Connection connection) {
         if (verbose) System.out.println("[Server] Client at " + connection.getPort() + " disconnected");
+        this.detachConnection(connection);
+        connection.close((Exception ignored) -> {});
         this.onClientDisConnected(connection);
     }
 
