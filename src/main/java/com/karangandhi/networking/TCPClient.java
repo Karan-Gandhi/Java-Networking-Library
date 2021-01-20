@@ -7,6 +7,7 @@ import com.karangandhi.networking.utils.OwnerObject;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Objects;
 
 /**
  * This is the TCPClient class which will create a client that connects to the server on the given port
@@ -170,5 +171,37 @@ public abstract class TCPClient implements OwnerObject {
      */
     public Context getContext() {
         return context;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TCPClient tcpClient = (TCPClient) o;
+        return serverPort == tcpClient.serverPort &&
+                clientPort == tcpClient.clientPort &&
+                verbose == tcpClient.verbose &&
+                isRunning == tcpClient.isRunning &&
+                Objects.equals(serverConnection, tcpClient.serverConnection) &&
+                Objects.equals(context, tcpClient.context) &&
+                Objects.equals(clientSocket, tcpClient.clientSocket);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(serverConnection, context, clientSocket, serverPort, clientPort, verbose, isRunning);
+    }
+
+    @Override
+    public String toString() {
+        return "TCPClient{" +
+                "serverConnection=" + serverConnection +
+                ", context=" + context +
+                ", clientSocket=" + clientSocket +
+                ", serverPort=" + serverPort +
+                ", clientPort=" + clientPort +
+                ", verbose=" + verbose +
+                ", isRunning=" + isRunning +
+                '}';
     }
 }
