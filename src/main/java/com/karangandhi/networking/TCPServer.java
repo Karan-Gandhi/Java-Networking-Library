@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * This is the Server class and is used to create the tcp server
  */
-@SuppressWarnings({ "rawtypes" })
+@SuppressWarnings({ "unused", "rawtypes" })
 public abstract class TCPServer implements OwnerObject {
     private final ArrayList<Connection> clients;
 
@@ -131,7 +131,7 @@ public abstract class TCPServer implements OwnerObject {
      * This method waits for a client to connect
      */
     private void waitForClientConnection() {
-        for (int i = 0; i < ((int) (this.backlog / 1000) == 0 ? 1 : this.backlog / 1000); i++) {
+        for (int i = 0; i < ((this.backlog / 1000) == 0 ? 1 : this.backlog / 1000); i++) {
             Task serverTask = new Task(true, serverContext) {
                 @Override
                 public void run() throws IOException {
@@ -141,11 +141,9 @@ public abstract class TCPServer implements OwnerObject {
                         if (onClientConnected(clientConnection) && clientConnection != null) {
                             if (verbose)
                                 System.out.println("[Server] Client at " + clientConnection.getPort() + " successfully connected");
-                            // TODO: Connection is successful
                             clients.add(clientConnection);
                         } else {
                             if (verbose) System.out.println("[Server] Client rejected");
-                            // TODO: Client rejected
                         }
                     }
                 }
