@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Context {
     private ArrayDeque<Task> tasks;
     private ArrayList<Thread> workers;
+    private ArrayList<Task> activeTasks;
     private OnStartCallback onStartCallback;
     private boolean isRunning;
 
@@ -15,6 +16,7 @@ public class Context {
     }
 
     public Context() {
+        activeTasks = new ArrayList<>();
         tasks = new ArrayDeque<>();
         workers = new ArrayList<>();
         onStartCallback = null;
@@ -37,16 +39,19 @@ public class Context {
             if (!currentTask.isAsynchronous) {
                 Exception exception = null;
                 try {
+                    activeTasks.add(currentTask);
                     currentTask.onInitialise();
                     currentTask.run();
                 } catch (Exception e) {
                     exception = e;
                 }
                 currentTask.markCompleted();
+                activeTasks.remove(currentTask);
                 if (!currentTask.onComplete(exception)) {
                     throw new TaskNotCompletedException(currentTask);
                 }
             } else {
+                activeTasks.add(currentTask);
                 Thread thread = new Thread(() -> {
                     synchronized (currentTask) {
                         Exception exception = null;
@@ -60,6 +65,8 @@ public class Context {
                             throw new TaskNotCompletedException(currentTask);
                         } catch (TaskNotCompletedException e) {
                             e.printStackTrace();
+                        } finally {
+                            activeTasks.remove(currentTask);
                         }
                     }
                 });
@@ -95,7 +102,7 @@ public class Context {
         for (Thread thread : workers) {
             if (thread.isAlive()) {
                 try {
-                    thread.interrupt();
+                    thread.wait();
                     thread.stop();
                 } catch (Exception ignore) { }
             }
