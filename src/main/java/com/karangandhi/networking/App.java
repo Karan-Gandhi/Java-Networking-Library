@@ -17,25 +17,25 @@ public class App implements Serializable {
     }
 
     public static void main(String[] args) throws IOException {
-//        Debug.setDebug(true);
+        Debug.setDebug(true);
 
         TCPServer server = null;
         try {
             server = new TCPServer("127.0.0.1", 8000, 10000, true) {
                 @Override
                 public boolean onClientConnected(Connection clientConnection) {
-                    dbg("Client Connected");
+//                    dbg("Client Connected");
                     return true;
                 }
 
                 @Override
                 public void onMessageReceived(Message receivedMessage, Connection client) {
-                    dbg("Recieved: " + receivedMessage + " from: " + client);
+//                    dbg("Recieved: " + receivedMessage + " from: " + client);
                 }
 
                 @Override
                 public void onClientDisConnected(Connection clientConnection) {
-                    dbg("Disconnected");
+//                    dbg("Disconnected");
                 }
             };
             server.start();

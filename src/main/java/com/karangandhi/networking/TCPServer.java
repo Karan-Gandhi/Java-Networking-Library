@@ -12,9 +12,9 @@ import java.util.Objects;
 /**
  * This is the Server class and is used to create the tcp server
  */
-@SuppressWarnings({ "unused", "rawtypes" })
+@SuppressWarnings({ "unused" })
 public abstract class TCPServer implements OwnerObject {
-    private final ArrayList<Connection> clients;
+    private final ArrayList<Connection<TCPServer>> clients;
 
     private final String ip;
     private final long port;
@@ -55,12 +55,11 @@ public abstract class TCPServer implements OwnerObject {
      * @param clientConnection  An Connection object of the connection for the client
      * @return                  Must return true if you want to accept the client else return false
      */
-    public abstract boolean onClientConnected(Connection clientConnection);
+    public abstract boolean onClientConnected(Connection<TCPServer> clientConnection);
 
     /**
      * An abstract method that will be called when the server receives a message from a client
-     *
-     * @param receivedMessage   The message recieved form the client
+     *  @param receivedMessage   The message recieved form the client
      * @param client            The connection object for the client
      */
     public abstract void onMessageReceived(Message receivedMessage, Connection client);
@@ -70,7 +69,7 @@ public abstract class TCPServer implements OwnerObject {
      *
      * @param clientConnection  The connection of the client which is disconnected
      */
-    public abstract void onClientDisConnected(Connection clientConnection);
+    public abstract void onClientDisConnected(Connection<TCPServer> clientConnection);
 
     /**
      * This method disconnects the client that connected
@@ -87,7 +86,7 @@ public abstract class TCPServer implements OwnerObject {
      * @param message           The message to be sent to the client
      * @param client            The connection of the client to send
      */
-    public void sendMessage(Message message, Connection client) {
+    public void sendMessage(Message<?, ?> message, Connection<TCPServer> client) {
         client.addMessage(message);
     }
 
@@ -96,8 +95,8 @@ public abstract class TCPServer implements OwnerObject {
      *
      * @param message           The message to be sent to all the connected clients
      */
-    public void sendAll(Message message) {
-        for (Connection client : this.clients) {
+    public void sendAll(Message<?, ?> message) {
+        for (Connection<TCPServer> client : this.clients) {
             client.addMessage(message);
         }
     }
@@ -108,8 +107,8 @@ public abstract class TCPServer implements OwnerObject {
      * @param message           The message to be sent
      * @param excludeClient     The client to be excluded
      */
-    public void sendAll(Message message, Connection excludeClient) {
-        for (Connection client : this.clients) {
+    public void sendAll(Message<?, ?> message, Connection<?> excludeClient) {
+        for (Connection<?> client : this.clients) {
             if (client.equals(excludeClient)) continue;
             client.addMessage(message);
         }
@@ -171,7 +170,7 @@ public abstract class TCPServer implements OwnerObject {
     public void clientConnectionClosed(Connection connection) {
         if (verbose) System.out.println("[Server] Client at " + connection.getPort() + " disconnected");
         this.detachConnection(connection);
-        connection.close((Exception ignored) -> {});
+        connection.close((Exception e) -> { });
         this.onClientDisConnected(connection);
     }
 
@@ -180,7 +179,7 @@ public abstract class TCPServer implements OwnerObject {
      * @return                  Returns a connection after the client is authenticated
      * @throws IOException      Throws an exception if the socket is already closed
      */
-    private Connection onClientConnect(Socket clientSocket) throws IOException {
+    private Connection<TCPServer> onClientConnect(Socket clientSocket) throws IOException {
         Connection<TCPServer> connection = new Connection<>(serverContext, Connection.Owner.SERVER, clientSocket, this);
         return connection.connectToClient() ? connection : null;
     }
@@ -198,7 +197,7 @@ public abstract class TCPServer implements OwnerObject {
             serverSocket.close();
             serverThread.join();
             synchronized (this.clients) {
-                for (Connection client : this.clients) {
+                for (Connection<TCPServer> client : this.clients) {
                     client.close((Exception ignored) -> { });
                 }
             }
@@ -212,7 +211,7 @@ public abstract class TCPServer implements OwnerObject {
      *
      * @param client    Connection of the client to remove
      */
-    public void removeClient(Connection client) {
+    public void removeClient(Connection<?> client) {
         clients.remove(client);
         client.close((Exception ignored) -> { });
     }
@@ -222,7 +221,7 @@ public abstract class TCPServer implements OwnerObject {
      *
      * @return  An arraylist of clients connected to the server
      */
-    public ArrayList<Connection> getClients() {
+    public ArrayList<Connection<TCPServer>> getClients() {
         return clients;
     }
 
