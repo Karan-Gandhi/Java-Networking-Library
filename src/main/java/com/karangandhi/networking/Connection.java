@@ -12,6 +12,8 @@ import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.UUID;
 
+import static com.karangandhi.networking.core.Debug.dbg;
+
 public class Connection<T extends OwnerObject> {
     public enum Owner { CLIENT, SERVER }
     public enum DefaultMessages { CONNECTED, AUTHORISATION }
@@ -80,9 +82,9 @@ public class Connection<T extends OwnerObject> {
     public boolean connectToClient() {
         if (owner == Owner.SERVER) {
             try {
-                long max = 0xFFFFFFFF;
+                long max = Long.MAX_VALUE;
                 long min = 0;
-                long randomToken = (long) (Math.random() * (max - min) + min);
+                long randomToken = (long) (Math.random() * max);
 
                 tokenSent = encode(randomToken);
                 tokenReceived = encode(tokenSent);
@@ -90,16 +92,11 @@ public class Connection<T extends OwnerObject> {
                 Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
                 authenticationMessage.writeTo(socketOutputStream);
 
-//                dbg("tokenSent = " + tokenSent + ", tokenExpected = " + tokenReceived);
-//                dbg("Header size = " + authenticationMessage.getHeaderSize());
-
                 Message<DefaultMessages, Long> receivedTokenMessage = Message.readFrom(socketInputStream);
 
                 if (receivedTokenMessage.getId() == DefaultMessages.AUTHORISATION && receivedTokenMessage.messageBody.equals(tokenReceived)) {
                     Message statusMessage = new Message<DefaultMessages, Serializable>(DefaultMessages.CONNECTED, null);
                     statusMessage.writeTo(socketOutputStream);
-
-//                    dbg("statusMessageHeaderSize = " + statusMessage.getHeaderSize());
 
                     Task readMessage = new Tasks.ReadMessageTask(context, socketInputStream, (Message newMessage) -> {
                         ownerObject.onMessageReceived(newMessage, this);
