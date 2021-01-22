@@ -1,6 +1,7 @@
 package com.karangandhi.networking.core;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 public abstract class Task {
@@ -76,5 +77,29 @@ public abstract class Task {
 
     public Thread getTaskThread() {
         return this.taskThread;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return isAsynchronous == task.isAsynchronous &&
+                Objects.equals(ID, task.ID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(taskCompleted, context, isAsynchronous, taskThread, ID);
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "taskCompleted=" + taskCompleted +
+                ", isAsynchronous=" + isAsynchronous +
+                ", taskThread=" + taskThread +
+                ", ID=" + ID +
+                '}';
     }
 }

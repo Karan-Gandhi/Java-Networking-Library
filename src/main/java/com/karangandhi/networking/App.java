@@ -30,7 +30,7 @@ public class App implements Serializable {
 
                 @Override
                 public void onMessageReceived(Message receivedMessage, Connection client) {
-//                    dbg("Recieved: " + receivedMessage + " from: " + client);
+                    dbg("Recieved: " + receivedMessage + " from: " + client);
                 }
 
                 @Override
@@ -44,7 +44,7 @@ public class App implements Serializable {
 
                 @Override
                 public boolean onConnected() {
-                    dbg("Client Connected");
+//                    dbg("Client Connected");
                     return true;
                 }
 
@@ -55,7 +55,7 @@ public class App implements Serializable {
 
                 @Override
                 public void onDisConnected(Connection clientConnection) {
-                    dbg("Disconnected");
+//                    dbg("Disconnected");
                 }
             };
             client.start();

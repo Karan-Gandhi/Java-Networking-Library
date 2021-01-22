@@ -180,11 +180,8 @@ public abstract class TCPClient implements OwnerObject {
         TCPClient tcpClient = (TCPClient) o;
         return serverPort == tcpClient.serverPort &&
                 clientPort == tcpClient.clientPort &&
-                verbose == tcpClient.verbose &&
-                isRunning == tcpClient.isRunning &&
                 Objects.equals(serverConnection, tcpClient.serverConnection) &&
-                Objects.equals(context, tcpClient.context) &&
-                Objects.equals(clientSocket, tcpClient.clientSocket);
+                Objects.equals(context, tcpClient.context);
     }
 
     @Override

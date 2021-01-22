@@ -3,6 +3,7 @@ package com.karangandhi.networking.core;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Context {
     private ArrayDeque<Task> tasks;
@@ -120,5 +121,36 @@ public class Context {
 
     public void addOnStartCallback(OnStartCallback callback) {
         this.onStartCallback = callback;
+    }
+
+    public ArrayList<Task> getActiveTasks() {
+        return activeTasks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Context context = (Context) o;
+        return Objects.equals(tasks, context.tasks) &&
+                Objects.equals(workers, context.workers) &&
+                Objects.equals(activeTasks, context.activeTasks) &&
+                Objects.equals(onStartCallback, context.onStartCallback);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tasks, workers, activeTasks, onStartCallback, isRunning);
+    }
+
+    @Override
+    public String toString() {
+        return "Context{" +
+                "tasks=" + tasks +
+                ", workers=" + workers +
+                ", activeTasks=" + activeTasks +
+                ", onStartCallback=" + onStartCallback +
+                ", isRunning=" + isRunning +
+                '}';
     }
 }

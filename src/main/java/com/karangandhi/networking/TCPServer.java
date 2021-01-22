@@ -10,7 +10,21 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * This is the Server class and is used to create the tcp server
+ * This is the Server class and is used to create the tcp server.
+ *
+ * When the start method is called after creating a instance of a server the server
+ * starts listening for clients at the given port. Once is client is connected the
+ * server creates the Connection object which will authenticate the client. This
+ * client connection is then passed to the onClientConnected method which should
+ * return true if the client is accepted.
+ *
+ * The methods send and sendAll can be used to send messages to the client and the
+ * onMessageReceived method is called when the server reads the message.
+ *
+ * You can remove a client by calling the removeClient method.
+ *
+ * Simply calling the stop server will stop the server (automatically close all
+ * the connections)
  */
 @SuppressWarnings({ "unused" })
 public abstract class TCPServer implements OwnerObject {
