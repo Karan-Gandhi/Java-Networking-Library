@@ -62,21 +62,21 @@ public abstract class TCPServer implements OwnerObject {
      *  @param receivedMessage   The message recieved form the client
      * @param client            The connection object for the client
      */
-    public abstract void onMessageReceived(Message receivedMessage, Connection client);
+    public abstract void onMessageReceived(Message<?, ?> receivedMessage, Connection<?> client);
 
     /**
      * An abstract method which will be called when a client gets disconnected
      *
      * @param clientConnection  The connection of the client which is disconnected
      */
-    public abstract void onClientDisConnected(Connection<TCPServer> clientConnection);
+    public abstract void onClientDisConnected(Connection<?> clientConnection);
 
     /**
      * This method disconnects the client that connected
      *
      * @param connection        The connection that is to be removed or detached
      */
-    public void detachConnection(Connection connection) {
+    public void detachConnection(Connection<?> connection) {
         clients.remove(connection);
     }
 
@@ -136,7 +136,7 @@ public abstract class TCPServer implements OwnerObject {
                 public void run() throws IOException {
                     while (isRunning) {
                         Socket socket = serverSocket.accept();
-                        Connection clientConnection = onClientConnect(socket);
+                        Connection<TCPServer> clientConnection = onClientConnect(socket);
                         if (onClientConnected(clientConnection) && clientConnection != null) {
                             if (verbose)
                                 System.out.println("[Server] Client at " + clientConnection.getPort() + " successfully connected");
@@ -167,7 +167,7 @@ public abstract class TCPServer implements OwnerObject {
      * @param connection    Closes the connection and notifies the server that the client has been disconnected
      */
     @Override
-    public void clientConnectionClosed(Connection connection) {
+    public void clientConnectionClosed(Connection<?> connection) {
         if (verbose) System.out.println("[Server] Client at " + connection.getPort() + " disconnected");
         this.detachConnection(connection);
         connection.close((Exception e) -> { });
