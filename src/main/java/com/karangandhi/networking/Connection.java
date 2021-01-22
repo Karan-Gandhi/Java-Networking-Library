@@ -12,24 +12,23 @@ import java.net.Socket;
 import java.util.ArrayDeque;
 import java.util.UUID;
 
-import static com.karangandhi.networking.core.Debug.dbg;
-
+@SuppressWarnings({"unused", "unchecked"})
 public class Connection<T extends OwnerObject> {
     public enum Owner { CLIENT, SERVER }
     public enum DefaultMessages { CONNECTED, AUTHORISATION }
 
-    public interface onCloseExceptions { public void onCloseException(Exception e); }
+    public interface onCloseExceptions { void onCloseException(Exception e); }
 
-    private ArrayDeque<Message> outMessageQueue;
+    final private ArrayDeque<Message<?, ?>> outMessageQueue;
 
-    private Context context;
-    private Owner owner;
-    private Socket ownerSocket;
-    private T ownerObject;
-    private UUID id;
+    final private Context context;
+    final private Owner owner;
+    final private Socket ownerSocket;
+    final private T ownerObject;
+    final private UUID id;
 
-    private InputStream socketInputStream;
-    private OutputStream socketOutputStream;
+    final private InputStream socketInputStream;
+    final private OutputStream socketOutputStream;
 
     private Long tokenSent, tokenReceived;
 
@@ -47,10 +46,10 @@ public class Connection<T extends OwnerObject> {
     public boolean connectToServer() {
         if (owner == Owner.CLIENT) {
             try {
-                Message message = Message.readFrom(socketInputStream);
-                long authenticationToken = encode((long) message.messageBody);
+                Message<DefaultMessages, Long> message = Message.readFrom(socketInputStream);
+                long authenticationToken = encode(message.messageBody);
 
-                Message newMessage = new Message(Connection.DefaultMessages.AUTHORISATION, authenticationToken);
+                Message<DefaultMessages, Long> newMessage = new Message<>(Connection.DefaultMessages.AUTHORISATION, authenticationToken);
                 newMessage.writeTo(socketOutputStream);
 
                 this.tokenReceived = this.encode(authenticationToken);
@@ -58,14 +57,14 @@ public class Connection<T extends OwnerObject> {
 
                 Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
                 authenticationMessage.writeTo(socketOutputStream);
-                Message statusMessage = Message.readFrom(socketInputStream);
+                Message<DefaultMessages, ?> statusMessage = Message.readFrom(socketInputStream);
 
                 if (statusMessage.getId() == DefaultMessages.CONNECTED) {
-                    Task readMessage = new Tasks.ReadMessageTask(context, socketInputStream, (Message recievedMessage) -> {
-                        ownerObject.onMessageReceived(recievedMessage, this);
-                    }, () -> {
-                        Connection.this.ownerObject.clientConnectionClosed(Connection.this);
-                    });
+                    Task readMessage = new Tasks.ReadMessageTask(context,
+                            socketInputStream,
+                            (Message<?, ?> recievedMessage) -> ownerObject.onMessageReceived(recievedMessage, this),
+                            () -> Connection.this.ownerObject.clientConnectionClosed(Connection.this));
+
                     context.addTask(readMessage);
                     if (!context.isRunning()) context.start();
                     return true;
@@ -95,14 +94,14 @@ public class Connection<T extends OwnerObject> {
                 Message<DefaultMessages, Long> receivedTokenMessage = Message.readFrom(socketInputStream);
 
                 if (receivedTokenMessage.getId() == DefaultMessages.AUTHORISATION && receivedTokenMessage.messageBody.equals(tokenReceived)) {
-                    Message statusMessage = new Message<DefaultMessages, Serializable>(DefaultMessages.CONNECTED, null);
+                    Message<DefaultMessages, Serializable> statusMessage = new Message<>(DefaultMessages.CONNECTED, null);
                     statusMessage.writeTo(socketOutputStream);
 
-                    Task readMessage = new Tasks.ReadMessageTask(context, socketInputStream, (Message newMessage) -> {
-                        ownerObject.onMessageReceived(newMessage, this);
-                    }, () -> {
-                        Connection.this.ownerObject.clientConnectionClosed(Connection.this);
-                    });
+                    Task readMessage = new Tasks.ReadMessageTask(context,
+                            socketInputStream,
+                            (Message<?, ?> newMessage) -> ownerObject.onMessageReceived(newMessage, this),
+                            () -> Connection.this.ownerObject.clientConnectionClosed(Connection.this));
+
                     context.addTask(readMessage);
                     if (!context.isRunning()) context.start();
                     return true;
@@ -120,7 +119,7 @@ public class Connection<T extends OwnerObject> {
     public void writeMessage() {
         synchronized (outMessageQueue) {
             while (!outMessageQueue.isEmpty()) {
-                Message currentMessage = outMessageQueue.removeFirst();
+                Message<?, ?> currentMessage = outMessageQueue.removeFirst();
                 try {
                     currentMessage.writeTo(socketOutputStream);
                 } catch (IOException exception) {
@@ -131,7 +130,7 @@ public class Connection<T extends OwnerObject> {
         }
     }
 
-    public void addMessage(Message message) {
+    public void addMessage(Message<?, ?> message) {
         synchronized (outMessageQueue) {
             outMessageQueue.add(message);
             writeMessage();
@@ -162,8 +161,7 @@ public class Connection<T extends OwnerObject> {
 
     private Long encode(Long token) {
         // Hackers please don't read this
-        Long newToken = token ^ 0xC0DEBEEF;
-        return newToken;
+        return token ^ 0xC0DEBEEF;
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.io.InputStream;
 public class Tasks {
     public static class ReadMessageTask extends Task {
         public static interface Callback {
-            void onMessageReceived(Message message);
+            void onMessageReceived(Message<?, ?> message);
         }
 
         public static interface DisconnectCallback {
