@@ -7,6 +7,7 @@ import java.util.UUID;
 /**
  * The task that will be added to the context
  */
+@SuppressWarnings("unused")
 public abstract class Task {
     private boolean taskCompleted = false;
     final private Context context;
@@ -19,6 +20,7 @@ public abstract class Task {
      * Creates a IDLE task that prevents the context from exiting
      */
     // TODO: fix the idle task
+    @SuppressWarnings("unused")
     public static class IDLE extends Task {
         /**
          * The callback which will be called when an error occurs while starting the context
@@ -46,10 +48,10 @@ public abstract class Task {
         /**
          * Starts the task
          *
-         * @throws IOException      There is a exception that arises in the task
          */
+        @SuppressWarnings("StatementWithEmptyBody")
         @Override
-        public void run() throws IOException {
+        public void run() {
             while (getContext().getTaskLength() == 0);
             try {
                 getContext().start();
