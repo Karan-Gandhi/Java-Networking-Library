@@ -17,7 +17,7 @@ allprojects {
 And finally add the dependency
 ```
 dependencies {
-    implementation 'com.github.Karan-Gandhi:Java-Networking-Library:1.0.0'
+    implementation 'com.github.Karan-Gandhi:Java-Networking-Library:v1.0.0'
 }
 ```
 
