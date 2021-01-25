@@ -3,40 +3,83 @@ package com.karangandhi.networking.utils;
 import java.io.*;
 import java.util.Objects;
 
+/**
+ * Creates the MessageHeader that is read from the stream before the Message body
+ *
+ * @param <T>   The ID of the Message
+ */
+@SuppressWarnings("unused")
 public class MessageHeader<T extends Enum<T>> implements Serializable {
     public T id;
     private long size;
-    public static final int HEADER_SIZE = 231;
 
+    /**
+     * Creates a instance of MessageHeader
+     *
+     * @param id        The ID of the Message
+     */
     public MessageHeader(T id) {
         this.id = id;
         this.size = 0;
     }
 
+    /**
+     * Sets the Size of the message body
+     *
+     * @param size      The size to be set
+     */
     public void setSize(long size) {
         this.size = size;
     }
 
+    /**
+     * Returns the size of the message body to be read
+     *
+     * @return      The size of the message body
+     */
     public long getSize() {
         return size;
     }
 
+    /**
+     * Get the id of the message
+     *
+     * @return      The id of the message
+     */
     public T getId() {
         return id;
     }
 
+    /**
+     * Write the message to the stream
+     *
+     * @param out           The stream to be written on
+     * @throws IOException  This is thrown when there is a error while writing the message
+     */
     public void writeTo(OutputStream out) throws IOException {
         new DataOutputStream(out).writeInt(this.toByteArray().length);
         out.write(this.toByteArray(), 0, this.toByteArray().length);
     }
 
-    public static MessageHeader readFrom(InputStream inputStream) throws IOException {
+    /**
+     * Reads the message from the InputStream
+     *
+     * @param inputStream   The Stream for the message to be read from
+     * @return              The built MessageHeader
+     * @throws IOException  This is thrown when there is a error writing the message
+     */
+    public static MessageHeader<?> readFrom(InputStream inputStream) throws IOException {
         int headerSize = new DataInputStream(inputStream).readInt();
         byte[] array = new byte[headerSize];
-        inputStream.read(array, 0, headerSize);
+        final int read = inputStream.read(array, 0, headerSize);
         return MessageHeader.fromByteArray(array);
     }
 
+    /**
+     * Converts the message to a byte array
+     *
+     * @return      THhe byte array
+     */
     public byte[] toByteArray() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = null;
@@ -44,8 +87,7 @@ public class MessageHeader<T extends Enum<T>> implements Serializable {
             objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
             objectOutputStream.writeObject(this);
             objectOutputStream.flush();
-            byte[] bytes = byteArrayOutputStream.toByteArray();
-            return bytes;
+            return byteArrayOutputStream.toByteArray();
         } catch (IOException exception) {
             exception.printStackTrace();
         } finally {
@@ -59,18 +101,21 @@ public class MessageHeader<T extends Enum<T>> implements Serializable {
         return null;
     }
 
-    public static MessageHeader fromByteArray(byte[] bytes) {
+    /**
+     * Build the message from the Byte array
+     *
+     * @param bytes     The bytes from where the message should be read
+     * @return          The Built message header
+     */
+    public static MessageHeader<?> fromByteArray(byte[] bytes) {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         ObjectInput objectInput = null;
 
         try {
             objectInput = new ObjectInputStream(byteArrayInputStream);
-            MessageHeader header = (MessageHeader) objectInput.readObject();
-            return header;
-        } catch (IOException exception) {
+            return (MessageHeader<?>) objectInput.readObject();
+        } catch (IOException | ClassNotFoundException exception) {
             exception.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } finally {
             try {
                 byteArrayInputStream.close();
