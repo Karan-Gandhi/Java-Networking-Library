@@ -8,16 +8,16 @@ This is a networking library written in java which helps creating tcp servers fa
 Add JitPack repository to root `build.gradle`
 ```
 allprojects {
-	repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
 }
 ```
 And finally add the dependency
 ```
 dependencies {
-	implementation 'com.github.Karan-Gandhi:Java-Networking-Library:Tag'
+    implementation 'com.github.Karan-Gandhi:Java-Networking-Library:Tag'
 }
 ```
 
