@@ -90,7 +90,7 @@ public class Connection<T extends OwnerObject> {
     public boolean connectToServer() {
         if (owner == Owner.CLIENT) {
             try {
-                Message<DefaultMessages, Long> message = Message.readFrom(socketInputStream);
+                Message<DefaultMessages, Long> message = (Message<DefaultMessages, Long>) Message.readFrom(socketInputStream);
                 long authenticationToken = encode(message.messageBody);
 
                 Message<DefaultMessages, Long> newMessage = new Message<>(Connection.DefaultMessages.AUTHORISATION, authenticationToken);
@@ -101,7 +101,7 @@ public class Connection<T extends OwnerObject> {
 
                 Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
                 authenticationMessage.writeTo(socketOutputStream);
-                Message<DefaultMessages, ?> statusMessage = Message.readFrom(socketInputStream);
+                Message<DefaultMessages, ?> statusMessage = (Message<DefaultMessages, ?>) Message.readFrom(socketInputStream);
 
                 if (statusMessage.getId() == DefaultMessages.CONNECTED) {
                     Task readMessage = new Tasks.ReadMessageTask(context,
@@ -146,7 +146,7 @@ public class Connection<T extends OwnerObject> {
                 Message<DefaultMessages, Long> authenticationMessage = new Message<>(DefaultMessages.AUTHORISATION, tokenSent);
                 authenticationMessage.writeTo(socketOutputStream);
 
-                Message<DefaultMessages, Long> receivedTokenMessage = Message.readFrom(socketInputStream);
+                Message<DefaultMessages, Long> receivedTokenMessage = (Message<DefaultMessages, Long>) Message.readFrom(socketInputStream);
 
                 if (receivedTokenMessage.getId() == DefaultMessages.AUTHORISATION && receivedTokenMessage.messageBody.equals(tokenReceived)) {
                     Message<DefaultMessages, Serializable> statusMessage = new Message<>(DefaultMessages.CONNECTED, null);

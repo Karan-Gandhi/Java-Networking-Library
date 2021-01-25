@@ -112,12 +112,8 @@ public class Context {
                 thread.start();
             }
         }
-        try {
-            this.pause();
-        } catch (InterruptedException exception) {
-            exception.printStackTrace();
-        }
-//        isRunning = false;
+        //            this.pause();
+        //        isRunning = false;
     }
 
     /**
