@@ -7,6 +7,12 @@ package com.karangandhi.networking.core;
 public class Debug {
     private static boolean debug = false;
 
+    /**
+     * Prints the debug message
+     *
+     * @param message       The message to be printed
+     * @param <T>           The datatype of the message to be printed
+     */
     public static <T> void dbg(T message) {
         if(debug) {
             StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
@@ -21,6 +27,11 @@ public class Debug {
         }
     }
 
+    /**
+     * Sets the debug status
+     *
+     * @param status        If you want to debug or not
+     */
     public static void setDebug(boolean status) {
         debug = status;
     }
