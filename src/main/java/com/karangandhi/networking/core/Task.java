@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * The task that will be added to the context
+ */
 public abstract class Task {
     private boolean taskCompleted = false;
     private Context context;

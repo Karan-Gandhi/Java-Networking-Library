@@ -9,10 +9,11 @@ import java.util.Objects;
  * This is a class that creates a context. This class will be responsible of all the
  * threads, tasks that will be running in the background
  */
+@SuppressWarnings("unused")
 public class Context {
-    private ArrayDeque<Task> tasks;
-    private ArrayList<Thread> workers;
-    private ArrayList<Task> activeTasks;
+    final private ArrayDeque<Task> tasks;
+    final private ArrayList<Thread> workers;
+    final private ArrayList<Task> activeTasks;
     private OnStartCallback onStartCallback;
     private boolean isRunning;
 
@@ -21,7 +22,7 @@ public class Context {
     /**
      * This is a callback which will be called when the context starts
      */
-    public static interface OnStartCallback {
+    public interface OnStartCallback {
         void onStart();
     }
 
@@ -172,7 +173,7 @@ public class Context {
      * @return      true if the context is running
      */
     public boolean isRunning() {
-        return isRunning;
+        return !isRunning;
     }
 
     /**

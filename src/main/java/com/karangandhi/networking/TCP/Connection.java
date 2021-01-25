@@ -110,7 +110,7 @@ public class Connection<T extends OwnerObject> {
                             () -> Connection.this.ownerObject.clientConnectionClosed(Connection.this));
 
                     context.addTask(readMessage);
-                    if (!context.isRunning()) context.start();
+                    if (context.isRunning()) context.start();
                     return true;
                 } else {
                     return false;
@@ -158,7 +158,7 @@ public class Connection<T extends OwnerObject> {
                             () -> Connection.this.ownerObject.clientConnectionClosed(Connection.this));
 
                     context.addTask(readMessage);
-                    if (!context.isRunning()) context.start();
+                    if (context.isRunning()) context.start();
                     return true;
                 } else {
                     if (ownerObject.isVerbose()) System.out.println("[Connection] Closing Connection - Authentication failed: ID = " + receivedTokenMessage.getId() + ", Recieved Token = " + receivedTokenMessage.messageBody + ", Expected Token = " + this.tokenReceived + ", Authentication Status = " + (receivedTokenMessage.messageBody.equals(tokenReceived)));
