@@ -21,4 +21,10 @@ dependencies {
 }
 ```
 
+## Documentation
+
 ## Usage
+
+## Customization
+
+## License
