@@ -3,8 +3,15 @@ package com.karangandhi.networking.utils;
 import java.io.*;
 import java.util.Objects;
 
+/**
+ * This is the message class that will be written and read from the stream of the socket.
+ *
+ * @param <T>
+ * @param <Q>
+ */
+@SuppressWarnings("unused")
 public class Message <T extends Enum<T>, Q extends Serializable> implements Serializable {
-    private MessageHeader<T> messageHeader;
+    final private MessageHeader<T> messageHeader;
     public Q messageBody;
 
     public Message(T id, Q messageBody) {
@@ -13,7 +20,7 @@ public class Message <T extends Enum<T>, Q extends Serializable> implements Seri
         messageHeader.setSize(this.getBodySize());
     }
 
-    private Message(MessageHeader header, Q messageBody) {
+    private Message(MessageHeader<T> header, Q messageBody) {
         this.messageHeader = header;
         this.messageBody = messageBody;
     }
@@ -31,13 +38,13 @@ public class Message <T extends Enum<T>, Q extends Serializable> implements Seri
         outputStream.write(toByteArray());
     }
 
-    public static Message readFrom(InputStream inputStream) throws IOException {
-        MessageHeader header = MessageHeader.readFrom(inputStream);
+    public static Message<?, ?> readFrom(InputStream inputStream) throws IOException {
+        MessageHeader<?> header = MessageHeader.readFrom(inputStream);
         int size = (int) header.getSize();
         byte[] array = new byte[size];
-        inputStream.read(array);
+        inputStream.read(array)
         Object obj = fromByteArray(array);
-        return new Message(header, (Serializable) obj);
+        return new Message<>(header, (Serializable) obj);
     }
 
     public byte[] toByteArray() {
@@ -47,8 +54,7 @@ public class Message <T extends Enum<T>, Q extends Serializable> implements Seri
             objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
             objectOutputStream.writeObject(this.messageBody);
             objectOutputStream.flush();
-            byte[] bytes = byteArrayOutputStream.toByteArray();
-            return bytes;
+            return byteArrayOutputStream.toByteArray();
         } catch (IOException exception) {
             exception.printStackTrace();
         } finally {
@@ -91,10 +97,8 @@ public class Message <T extends Enum<T>, Q extends Serializable> implements Seri
         try {
             objectInput = new ObjectInputStream(byteArrayInputStream);
             return objectInput.readObject();
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         } finally {
             try {
                 byteArrayInputStream.close();
