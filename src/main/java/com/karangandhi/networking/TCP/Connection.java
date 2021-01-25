@@ -1,4 +1,4 @@
-package com.karangandhi.networking;
+package com.karangandhi.networking.TCP;
 
 import com.karangandhi.networking.core.Context;
 import com.karangandhi.networking.core.ObjectLock;

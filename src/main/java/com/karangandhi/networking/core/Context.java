@@ -5,6 +5,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * This is a class that creates a context. This class will be responsible of all the
+ * threads, tasks that will be running in the background
+ */
 public class Context {
     private ArrayDeque<Task> tasks;
     private ArrayList<Thread> workers;
@@ -12,10 +16,18 @@ public class Context {
     private OnStartCallback onStartCallback;
     private boolean isRunning;
 
+    public boolean isPaused = false;
+
+    /**
+     * This is a callback which will be called when the context starts
+     */
     public static interface OnStartCallback {
         void onStart();
     }
 
+    /**
+     * Creates a instance of Context
+     */
     public Context() {
         activeTasks = new ArrayList<>();
         tasks = new ArrayDeque<>();
@@ -24,14 +36,33 @@ public class Context {
         isRunning = false;
     }
 
+    /**
+     * Adds a task to the Context
+     *
+     * @param t     The task to be added
+     */
     public void addTask(Task t) {
         tasks.add(t);
+        if (this.isPaused) this.resume();
     }
 
+    /**
+     * This method return the next task that needs to be executed
+     *
+     * @return      The next task in the queue
+     */
     private Task getNextTask() {
         return tasks.removeFirst();
     }
 
+    /**
+     * Starts the context.
+     *
+     * This method will assign all the threads to the asynchronous tasks and call the onInitialise and
+     * the onComplete method of the task
+     *
+     * @throws TaskNotCompletedException    This is thrown when there is a exception that arises while completing the task
+     */
     public void start() throws TaskNotCompletedException {
         isRunning = true;
         if (onStartCallback != null) this.onStartCallback.onStart();
@@ -77,29 +108,53 @@ public class Context {
                 thread.start();
             }
         }
-        isRunning = false;
+        try {
+            this.pause();
+        } catch (InterruptedException exception) {
+            exception.printStackTrace();
+        }
+//        isRunning = false;
     }
 
+    /**
+     * Get the length of the task queue
+     *
+     * @return      The length of the remaining tasks
+     */
     public int getTaskLength() {
         return tasks.size();
     }
 
+    /**
+     * Pauses the context
+     *
+     * @throws InterruptedException     This is thrown when any thread is interrupted
+     */
     public void pause() throws InterruptedException {
         // TODO: Test this method
+        this.isPaused = true;
         for (Thread thread : workers) {
             if(thread.isAlive()) thread.wait();
         }
     }
 
+    /**
+     * Resumes the context if it is paused
+     */
     public void resume() {
         // TODO: Test this method
+        this.isPaused = false;
         for (Thread thread : workers) {
             thread.notify();
         }
     }
 
+    /**
+     * Stops the context killing all the threads
+     */
     @SuppressWarnings("deprecation")
     public void stop() {
+        isRunning = false;
         for (Thread thread : workers) {
             if (thread.isAlive()) {
                 try {
@@ -111,18 +166,38 @@ public class Context {
         tasks.clear();
     }
 
+    /**
+     * Returns the state of the context: if it is running or not
+     *
+     * @return      true if the context is running
+     */
     public boolean isRunning() {
         return isRunning;
     }
 
+    /**
+     * Gets the first task in the queue
+     *
+     * @return      The first task in the queue
+     */
     public Task getFirstTask() {
         return this.tasks.getFirst();
     }
 
+    /**
+     * Adds a callback that will be called when the context starts
+     *
+     * @param callback      The callback to be added
+     */
     public void addOnStartCallback(OnStartCallback callback) {
         this.onStartCallback = callback;
     }
 
+    /**
+     * Fetches all the active tasks
+     *
+     * @return      All the active tasks of the context
+     */
     public ArrayList<Task> getActiveTasks() {
         return activeTasks;
     }

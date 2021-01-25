@@ -1,5 +1,9 @@
 package com.karangandhi.networking.core;
 
+/**
+ * This is a class that helps improving the debugging, adds the class, method name and the line number
+ * from where each method is called and where the debug was called.
+ */
 public class Debug {
     private static boolean debug = false;
 

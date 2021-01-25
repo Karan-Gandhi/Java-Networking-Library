@@ -1,6 +1,6 @@
 package com.karangandhi.networking.utils;
 
-import com.karangandhi.networking.Connection;
+import com.karangandhi.networking.TCP.Connection;
 
 public interface OwnerObject {
     public abstract void onMessageReceived(Message<?, ?> receivedMessage, Connection<?> client);
