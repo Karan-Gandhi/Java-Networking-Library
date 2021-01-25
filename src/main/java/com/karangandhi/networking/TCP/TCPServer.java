@@ -163,7 +163,7 @@ public abstract class TCPServer implements OwnerObject {
 
                 @Override
                 public boolean onComplete(Exception exception) {
-                    return exception == null;
+                    return exception != null;
                 }
 
                 @Override

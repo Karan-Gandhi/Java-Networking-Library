@@ -42,7 +42,7 @@ public class Tasks {
         @Override
         public boolean onComplete(Exception e) {
             if (e != null) disconnect.onDisconnect();
-            return true;
+            return false;
         }
     }
 }

@@ -23,6 +23,9 @@ public class Context {
      * This is a callback which will be called when the context starts
      */
     public interface OnStartCallback {
+        /**
+         * The main method of the interface that is called as a callback
+         */
         void onStart();
     }
 
@@ -80,7 +83,7 @@ public class Context {
                 }
                 currentTask.markCompleted();
                 activeTasks.remove(currentTask);
-                if (!currentTask.onComplete(exception)) {
+                if (currentTask.onComplete(exception)) {
                     throw new TaskNotCompletedException(currentTask);
                 }
             } else {
@@ -94,7 +97,7 @@ public class Context {
                         } catch (IOException ioException) {
                             exception = ioException;
                         }
-                        if (!currentTask.onComplete(exception)) try {
+                        if (currentTask.onComplete(exception)) try {
                             throw new TaskNotCompletedException(currentTask);
                         } catch (TaskNotCompletedException e) {
                             e.printStackTrace();
