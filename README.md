@@ -4,20 +4,20 @@
 
 ## Overview
 
-This is a networking library written in java which helps creating tcp servers faster. Now it is easy to create TCP servers just with a few lines of code without much experience in networking. This library gives flexiblity and allows you to send custom objects through the socket stream. The documentation is available [here]
+This is a networking library written in java which helps creating tcp servers faster. Now it is easy to create TCP servers just with a few lines of code without much experience in networking. This library gives flexiblity and allows you to send custom objects through the socket stream. The documentation is available [here](https://karan-gandhi.github.io/Java-Networking-Library/)
 
 This library runs on **Android** as well as on **Desktop**
 
-- [Quickstart]()
-- [Dependency]()
-  - [Gradle]()
-  - [Maven]()
-- [Licence]()
-- [QuickLinks]()
+- [Quickstart](#quickstart)
+- [Dependency](#dependency)
+  - [Gradle](#gradle)
+  - [Maven](#maven)
+- [Licence](#license)
+- [QuickLinks](#quicklinks)
 
 ## QuickStart
 
-Here's a sample code that simply creates a client and a server and sends a message. For more details you can visit the [Documentation page]
+Here's a sample code that simply creates a client and a server and sends a message. For more details you can visit the [Documentation page](https://karan-gandhi.github.io/Java-Networking-Library/)
 
 The Server class
 ```Java
@@ -158,4 +158,4 @@ dependencies {
 ## License
 
 ## QuickLinks
-- [Documentation]()
+- [Documentation](https://karan-gandhi.github.io/Java-Networking-Library/)
