@@ -27,19 +27,18 @@ public class App {
     public static void main(String[] args) {
         try {
             // Creating a server on IP address 127.0.0.1 (localhost) at port 80
-            TCPServer server = new TCPServer(/*IP: */ 127.0.0.1, /*Port: */ 80, /*Backlog: */ 100, /*Verbose: */ true) {
+            TCPServer server = new TCPServer(/*IP: */ "127.0.0.1", /*Port: */ 80, /*Backlog: */ 100, /*Verbose: */ true) {
                 @Override
                 public boolean onClientConnected(Connection clientConnection) {
                     // Here if we return false the client will be rejected. 
-                    // For this example we will except all clients who connect 
-                    // to the server and are authenticated by the server
+                    // For this example we will except all clients who connect to the server and are authenticated by the server
                     System.out.println("Client Connected");
                     return true;
                 }
 
                 @Override
                 public void onMessageReceived(Message receivedMessage, Connection client) {
-                    if (recievedMessage.getId() == Methods.GREET) {
+                    if (receivedMessage.getId() == Methods.GREET) {
                         // Print the message recieved
                         System.out.println("Message recieved: " + receivedMessage.messageBody);
                         
@@ -50,7 +49,7 @@ public class App {
                         this.sendMessage(messageToSend, client);
                         
                         // Build the message to send it to everyone
-                        Message<Methods, String> messageToBrodcast = new Message<>(Methods.JOIN, client.getPort());
+                        Message<Methods, String> messageToBrodcast = new Message<Methods, String>(Methods.JOIN, String.valueOf(client.getPort()));
                         // Send the message to Everyone
                         this.sendAll(messageToBrodcast);
                     }
@@ -61,7 +60,7 @@ public class App {
                     // This will be called when the client disconnects
                     System.out.println("A client was disconnected");
                 }
-            }
+            };
             
             // This will start the server
             server.start();
