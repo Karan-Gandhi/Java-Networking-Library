@@ -4,7 +4,10 @@
 
 This is a networking library written in java which helps creating tcp servers faster
 
-## Gradle Dependency
+## Dependency
+
+### Gradle
+
 Add JitPack repository to root `build.gradle`
 ```Gradle
 allprojects {
@@ -18,6 +21,25 @@ And finally add the dependency
 dependencies {
     implementation 'com.github.Karan-Gandhi:Java-Networking-Library:v1.0.0'
 }
+```
+
+### Maven
+
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+```
+<dependency>
+    <groupId>com.github.Karan-Gandhi</groupId>
+    <artifactId>Java-Networking-Library</artifactId>
+    <version>v1.0.0</version>
+</dependency>
 ```
 
 ## Documentation
