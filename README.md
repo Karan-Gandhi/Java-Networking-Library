@@ -121,7 +121,7 @@ To stop the server and the client you can call the `stop()` method.
 
 ### Gradle
 
-Add JitPack repository to root `build.gradle`
+Add JitPack repository to root `build.gradle` for android
 ```Gradle
 allprojects {
     repositories {
@@ -129,6 +129,15 @@ allprojects {
     }
 }
 ```
+For Gradle:
+
+```Gradle
+repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+```
+
 And finally add the dependency
 ```Gradle
 dependencies {
