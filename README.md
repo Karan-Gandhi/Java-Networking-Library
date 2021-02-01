@@ -6,7 +6,7 @@ This is a networking library written in java which helps creating tcp servers fa
 
 ## Gradle Dependency
 Add JitPack repository to root `build.gradle`
-```
+```Gradle
 allprojects {
     repositories {
         maven { url 'https://jitpack.io' }
@@ -14,7 +14,7 @@ allprojects {
 }
 ```
 And finally add the dependency
-```
+```Gradle
 dependencies {
     implementation 'com.github.Karan-Gandhi:Java-Networking-Library:v1.0.0'
 }
