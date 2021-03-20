@@ -1,7 +1,6 @@
 package com.karangandhi.networking;
 
 import com.karangandhi.networking.TCP.*;
-import com.karangandhi.networking.core.Debug;
 import com.karangandhi.networking.utils.Message;
 
 import java.io.*;
@@ -18,7 +17,7 @@ public class App implements Serializable {
     }
 
     public static void main(String[] args) throws IOException {
-        Debug.setDebug(true);
+//        Debug.setDebug(true);
 
         TCPServer server = null;
         try {
@@ -31,7 +30,7 @@ public class App implements Serializable {
 
                 @Override
                 public void onMessageReceived(Message receivedMessage, Connection client) {
-                    dbg("Recieved: " + receivedMessage + " from: " + client);
+//                    dbg("Recieved: " + receivedMessage + " from: " + client);
                 }
 
                 @Override
@@ -51,7 +50,7 @@ public class App implements Serializable {
 
                 @Override
                 public void onMessageReceived(Message receivedMessage, Connection client) {
-                    dbg("Recieved: " + receivedMessage + " from: " + client);
+//                    dbg("Recieved: " + receivedMessage + " from: " + client);
                 }
 
                 @Override
@@ -62,17 +61,15 @@ public class App implements Serializable {
             client.start();
             Thread.sleep(1000);
             client.sendMessage(new Message(test.b, "Hello, world"));
-            server.sendAll(new Message(test.b, "Howdy"));
-            Thread.sleep(100);
-            client.disconnect();
-//            server.removeClient(client.getConnection());
-            server.stop();
+             server.sendAll(new Message(test.b, "Howdy"));
+             Thread.sleep(100);
+             client.disconnect();
+            // server.stop();
         } catch (Exception exception) {
             exception.printStackTrace();
             System.out.println("[Server] Server down");
         }
     }
-
 
     @Override
     public String toString() {

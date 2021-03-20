@@ -44,7 +44,7 @@ public class Connection<T extends OwnerObject> {
 
     final private Context context;
     final private Owner owner;
-    final private Socket ownerSocket;
+    final public Socket ownerSocket;
     final private T ownerObject;
     final private UUID id;
 
@@ -154,7 +154,7 @@ public class Connection<T extends OwnerObject> {
 
                     Task readMessage = new Tasks.ReadMessageTask(context,
                             socketInputStream,
-                            (Message<?, ?> newMessage) -> ownerObject.onMessageReceived(newMessage, this),
+                            (Message<?, ?> recievedMessage) -> ownerObject.onMessageReceived(recievedMessage, this),
                             () -> Connection.this.ownerObject.clientConnectionClosed(Connection.this));
 
                     context.addTask(readMessage);

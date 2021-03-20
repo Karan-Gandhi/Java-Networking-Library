@@ -112,8 +112,8 @@ public class Context {
                 thread.start();
             }
         }
-        //            this.pause();
-        //        isRunning = false;
+        // this.pause();
+        this.isRunning = false;
     }
 
     /**

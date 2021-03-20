@@ -76,7 +76,7 @@ public abstract class TCPServer implements OwnerObject {
      *  @param receivedMessage   The message recieved form the client
      * @param client            The connection object for the client
      */
-    public abstract void onMessageReceived(Message<?, ?> receivedMessage, Connection<?> client);
+        public abstract void onMessageReceived(Message<?, ?> receivedMessage, Connection<?> client);
 
     /**
      * An abstract method which will be called when a client gets disconnected
