@@ -2,6 +2,11 @@
 
 This class handles the connection between the server and client. It encloses the socket and sends the message to the server when I reads it from the socket. It is also responsible for writing the message to the socket. The server creates the connection object and calls the connectToClient method which will authenticate the client. The client will call the connectToServer method which will wait for the authentication message and then responds.
 
+You can import this class by:
+```java
+import com.karangandhi.networking.utils.Message;
+```
+
  * **Parameters:** `<T>` — The Class to which the connection belongs (TCPServer or TCPClient)
 
 ### `public enum Owner`
