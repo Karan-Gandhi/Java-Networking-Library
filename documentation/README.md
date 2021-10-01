@@ -1,5 +1,5 @@
 # Documentation
-**Note: If you want the complete documentation of this project please visit [this link](https://karan-gandhi.github.io/Java-Networking-Library/)**
+**Note:** If you want the complete documentation of this project please visit [this link](https://karan-gandhi.github.io/Java-Networking-Library/)
 ## Index
 - [TCPServer](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/master/documentation/TCPServer.md)
   - This is the Server class and is used to create the tcp server.
