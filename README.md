@@ -19,8 +19,6 @@ This library runs on **Android** as well as on **Desktop**
 ## Features
 
 - Setting up a TCP server/client fast
-- Client Server Authentication
-  - Once a server is setup and a Client requests connection to the server, the server sends a authentication message which is a random token, if the client responds to that message correctly (correctly encodes the token) then the server will accept the client else rejects it.
 - Sending custom objects across a connection
   - This library supports sending custom objects as message across connections. The message requires a id, which describes what is the type of message sent and the body which has the custom object. Once the message is sent to the other side of the connection, the message is deserialized.
   ```java
@@ -29,6 +27,9 @@ This library runs on **Android** as well as on **Desktop**
   client.sendMessage(messageToSend); // In case of client
   server.sendAll(messageToSend); // In case of server
   ```
+- Client Server Authentication
+  - Once a server is setup and a Client requests connection to the server, the server sends a authentication message which is a random token, if the client responds to that message correctly (correctly encodes the token) then the server will accept the client else rejects it.
+
 
 ## Dependency
 
