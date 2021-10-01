@@ -8,6 +8,12 @@ This is a networking library written in java which helps creating tcp servers fa
 
 - [Features](#features)
 - [Quickstart](#quickstart)
+- [Documentation](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/v1.1/documentation/README.md)
+  - [TCPServer](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/master/documentation/TCPServer.md)
+  - [TCPClient](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/master/documentation/TCPClient.md)
+  - [Message](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/master/documentation/Message.md)
+  - [MessageHeadder](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/master/documentation/MessageHeader.md)
+  - [Connection](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/master/documentation/Connection.md)
 - [Dependency](#dependency)
   - [Gradle](#gradle)
   - [Maven](#maven)
