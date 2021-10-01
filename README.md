@@ -29,7 +29,53 @@ This library runs on **Android** as well as on **Desktop**
   client.sendMessage(messageToSend); // In case of client
   server.sendAll(messageToSend); // In case of server
   ```
-  To know more about messages, you can visit [this link](https://karan-gandhi.github.io/Java-Networking-Library/)
+
+## Dependency
+
+### Gradle
+
+Add JitPack repository to root `build.gradle` for android
+```Gradle
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+For Gradle:
+
+```Gradle
+repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+```
+
+And finally add the dependency
+```Gradle
+dependencies {
+    implementation 'com.github.Karan-Gandhi:Java-Networking-Library:v1.0'
+}
+```
+
+### Maven
+
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+```xml
+<dependency>
+    <groupId>com.github.Karan-Gandhi</groupId>
+    <artifactId>Java-Networking-Library</artifactId>
+    <version>v1.0</version>
+</dependency>
+```
 
 ## QuickStart
 
@@ -131,53 +177,6 @@ public class App {
 }
 ```
 To stop the server and the client you can call the `stop()` method.
-
-## Dependency
-
-### Gradle
-
-Add JitPack repository to root `build.gradle` for android
-```Gradle
-allprojects {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
-For Gradle:
-
-```Gradle
-repositories {
-    jcenter()
-    maven { url "https://jitpack.io" }
-}
-```
-
-And finally add the dependency
-```Gradle
-dependencies {
-    implementation 'com.github.Karan-Gandhi:Java-Networking-Library:v1.0'
-}
-```
-
-### Maven
-
-```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-```
-
-```xml
-<dependency>
-    <groupId>com.github.Karan-Gandhi</groupId>
-    <artifactId>Java-Networking-Library</artifactId>
-    <version>v1.0</version>
-</dependency>
-```
 
 ## License
 
