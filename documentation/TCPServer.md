@@ -10,6 +10,11 @@ You can remove a client by calling the removeClient method.
 
 Simply calling the stop server will stop the server (automatically close all the connections)
 
+You can import this class by:
+```java
+import com.karangandhi.networking.TCP.TCPServer;
+```
+
 ### `public TCPServer(String ip, int port, int backlog, boolean verbose) throws IOException`
 
 Creates an Instance of the server
