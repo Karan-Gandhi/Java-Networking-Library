@@ -2,6 +2,11 @@
 
 This is the TCPClient class which will create a client that connects to the server on the given port
 
+You can import this class by:
+```java
+import com.karangandhi.networking.TCP.TCPClient;
+```
+
 ### `public TCPClient(String ip, int port, boolean verbose) throws IOException`
 
 Creates an instance of TCPClient
