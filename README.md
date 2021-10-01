@@ -8,7 +8,7 @@ This is a networking library written in java which helps creating tcp servers fa
 
 This library runs on **Android** as well as on **Desktop**
 
-- [Features](#feautres)
+- [Features](#features)
 - [Quickstart](#quickstart)
 - [Dependency](#dependency)
   - [Gradle](#gradle)
