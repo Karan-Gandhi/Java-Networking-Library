@@ -6,8 +6,6 @@
 
 This is a networking library written in java which helps creating tcp servers faster. Now it is easy to create TCP servers just with a few lines of code without much experience in networking. This library gives flexiblity and allows you to send custom objects through the socket stream. The documentation is available [here](https://karan-gandhi.github.io/Java-Networking-Library/)
 
-This library runs on **Android** as well as on **Desktop**
-
 - [Features](#features)
 - [Quickstart](#quickstart)
 - [Dependency](#dependency)
@@ -80,7 +78,7 @@ dependencies {
 
 ## QuickStart
 
-Here's a sample code that simply creates a client and a server and sends a message. For more details you can visit the [Documentation page](https://karan-gandhi.github.io/Java-Networking-Library/)
+Here's a sample code that simply creates a client and a server and sends a message. For more details you can visit the [Documentation page](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/master/documentation/README.md)
 
 The Server class
 ```Java
@@ -206,4 +204,4 @@ SOFTWARE.
 ```
 
 ## QuickLinks
-- [Documentation](https://karan-gandhi.github.io/Java-Networking-Library/)
+- [Documentation](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/master/documentation/README.md)
