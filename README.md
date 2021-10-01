@@ -33,14 +33,6 @@ This is a networking library written in java which helps creating tcp servers fa
 
 ### Gradle
 
-Add JitPack repository to root `build.gradle` for android
-```Gradle
-allprojects {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
 For Gradle:
 
 ```Gradle
@@ -74,6 +66,17 @@ dependencies {
     <artifactId>Java-Networking-Library</artifactId>
     <version>v1.0</version>
 </dependency>
+```
+
+### Android
+
+Add JitPack repository to root `build.gradle` for android
+```Gradle
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
 ```
 
 ## QuickStart
