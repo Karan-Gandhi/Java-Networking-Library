@@ -1,4 +1,6 @@
-# Index
+# Documentation
+**Note: If you want the complete documentation of this project please visit [this link](https://karan-gandhi.github.io/Java-Networking-Library/)**
+## Index
 - [TCPServer](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/master/documentation/TCPServer.md)
   - This is the Server class and is used to create the tcp server.
 When the start method is called after creating a instance of a server the server starts listening for clients at the given port. Once is client is connected the server creates the Connection object which will authenticate the client. This client connection is then passed to the onClientConnected method which should return true if the client is accepted.
