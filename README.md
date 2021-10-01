@@ -25,7 +25,11 @@ This library runs on **Android** as well as on **Desktop**
   - This library supports sending custom objects as message across connections. The message requires a id, which describes what is the type of message sent and the body which has the custom object. Once the message is sent to the other side of the connection, the message is deserialized.
   ```java
   foo bar = new foo();
+  Message<Ids, foo> messageToSend = new Message<>(Ids.MessageId, bar);
+  client.sendMessage(messageToSend); // In case of client
+  server.sendAll(messageToSend); // In case of server
   ```
+  To know more about messages, you can visit [this link](https://karan-gandhi.github.io/Java-Networking-Library/)
 
 ## QuickStart
 
