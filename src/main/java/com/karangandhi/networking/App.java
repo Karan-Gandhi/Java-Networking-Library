@@ -61,10 +61,10 @@ public class App implements Serializable {
             client.start();
             Thread.sleep(1000);
             client.sendMessage(new Message(test.b, "Hello, world"));
-             server.sendAll(new Message(test.b, "Howdy"));
-             Thread.sleep(100);
-             client.disconnect();
-            // server.stop();
+            server.sendAll(new Message(test.b, "Howdy"));
+            Thread.sleep(100);
+            client.disconnect();
+//            server.stop();
         } catch (Exception exception) {
             exception.printStackTrace();
             System.out.println("[Server] Server down");
