@@ -45,7 +45,7 @@ repositories {
 And finally add the dependency
 ```Gradle
 dependencies {
-    implementation 'com.github.Karan-Gandhi:Java-Networking-Library:v1.0'
+    implementation 'com.github.Karan-Gandhi:Java-Networking-Library:v1.1'
 }
 ```
 
@@ -64,7 +64,7 @@ dependencies {
 <dependency>
     <groupId>com.github.Karan-Gandhi</groupId>
     <artifactId>Java-Networking-Library</artifactId>
-    <version>v1.0</version>
+    <version>v1.1</version>
 </dependency>
 ```
 
@@ -76,6 +76,13 @@ allprojects {
     repositories {
         maven { url 'https://jitpack.io' }
     }
+}
+
+```
+And finally add the dependency
+```Gradle
+dependencies {
+    implementation 'com.github.Karan-Gandhi:Java-Networking-Library:v1.1'
 }
 ```
 
