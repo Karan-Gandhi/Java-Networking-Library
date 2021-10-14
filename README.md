@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is a networking library written in java which helps creating tcp servers faster. Now it is easy to create TCP servers just with a few lines of code without much experience in networking. This library gives flexiblity and allows you to send custom objects through the socket stream. The documentation is available [here](https://karan-gandhi.github.io/Java-Networking-Library/)
+This is a networking library written in java which helps creating tcp servers faster. Now it is easy to create TCP servers just with a few lines of code without much experience in networking. This library gives flexiblity and allows you to send custom objects through the socket stream. The documentation is available [here](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/v1.1/documentation/README.md)
 
 - [Features](#features)
 - [Quickstart](#quickstart)
@@ -221,3 +221,4 @@ SOFTWARE.
 
 ## QuickLinks
 - [Documentation](https://github.com/Karan-Gandhi/Java-Networking-Library/blob/master/documentation/README.md)
+- [Javadoc](https://karan-gandhi.github.io/Java-Networking-Library/)
