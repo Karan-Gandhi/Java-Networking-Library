@@ -211,7 +211,9 @@ public class Connection<T extends OwnerObject> {
             this.socketInputStream.close();
             this.socketOutputStream.close();
             this.ownerSocket.close();
+//            System.out.println("[Connection] Closed the client stream");
         } catch (IOException exception) {
+//            exception.printStackTrace();
             callback.onCloseException(exception);
         }
     }

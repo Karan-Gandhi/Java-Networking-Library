@@ -98,7 +98,9 @@ public class Context {
                             exception = ioException;
                         }
                         if (currentTask.onComplete(exception)) try {
-                            throw new TaskNotCompletedException(currentTask);
+                            if (!tasks.isEmpty()) {
+                                throw new TaskNotCompletedException(currentTask);
+                            }
                         } catch (TaskNotCompletedException e) {
                             e.printStackTrace();
                         } finally {
